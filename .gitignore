@@ -1,0 +1,21 @@
+# Standard Android Studio ignores
+*.iml
+.gradle
+local.properties
+.idea/workspace.xml
+.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+
+# Same ignores with android folder prepended
+/android/*.iml
+/android/.gradle
+/android/local.properties
+/android/.idea/workspace.xml
+/android/.idea/libraries
+/android/.DS_Store
+/android/build
+/android/captures
+/android/.externalNativeBuild

@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="50dp"
+    android:paddingRight="50dp" android:paddingTop="50dp"
+    android:paddingBottom="50dp" tools:context=".KeySharing">
+
+    <EditText
+        android:id="@+id/txtBoxAddMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/buttonAddMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="addMessage"
+        android:layout_below="@+id/txtBoxAddMessage"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/txtMessagesReceived"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonAddMessage"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
+
+
+    <TextView
+        android:id="@+id/txtMessageToSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/txtMessagesReceived"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+</RelativeLayout>
