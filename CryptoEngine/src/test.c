@@ -1,11 +1,3 @@
-#include <tc.h>
-#include "mathutils.h"
-#include <gmp.h>
-#include <check.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "test.h"
 
 
@@ -33,7 +25,7 @@ void main()
 	
 	serialized_info = tc_serialize_key_metainfo(info);
 	printf("%s\n", "Serialized key info:");
-	//printf("%s\n", serialize_public_key(info->public_key));
+	printf("%s\n", serialize_public_key(info->public_key));
 	// Clear original shares
 	tc_clear_key_shares(shares, info);
 

@@ -5,7 +5,7 @@ ODIR = obj
 SHROBJ = /usr/local/lib/libtc.so
 
 CFLAGS = -I$(IDIR)
-_DEPS = test.h mathutils.h tc_internal.h
+_DEPS = $(wildcard *.h) #test.h mathutils.h tc_internal.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = test.o
@@ -20,7 +20,7 @@ SRC=$(wildcard *.c)
 #	$(CC) -o $@ $^ $(SHROBJ) $(CFLAGS)
 
 $(ODIR)/test: $(SRC)
-	$(CC) -o $@ $^ $(SHROBJ) $(CFLAGS)
+	$(CC) -o $@ $^ $(DEPS) $(SHROBJ) $(CFLAGS)
 	
 .PHONEY: clean
 
