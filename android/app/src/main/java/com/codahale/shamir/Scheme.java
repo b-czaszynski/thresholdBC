@@ -127,7 +127,7 @@ public class Scheme {
         if(length == -1){
           length = by.length;
         }else{
-          checkArgument(length != by.length, "Varying lengths of part values");
+          checkArgument(length == by.length, "Varying lengths of part values length 1:" + length + " length 2: " + by.length);
         }
     }
     final byte[] secret = new byte[length];

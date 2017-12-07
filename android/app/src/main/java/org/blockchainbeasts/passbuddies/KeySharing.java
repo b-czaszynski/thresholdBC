@@ -16,14 +16,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codahale.shamir.Scheme;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KeySharing extends Activity
         implements NfcAdapter.OnNdefPushCompleteCallback,
         NfcAdapter.CreateNdefMessageCallback {
-    private ArrayList<String> messagesToSendArray = new ArrayList<>();
-    private ArrayList<String> messagesReceivedArray = new ArrayList<>();
+    private ArrayList<byte[]> messagesToSendArray = new ArrayList<>();
+    private ArrayList<byte[]> messagesReceivedArray = new ArrayList<>();
+    private byte[] myShare;
 
     private EditText txtBoxAddMessage;
     private TextView txtReceivedMessages;
@@ -32,13 +37,26 @@ public class KeySharing extends Activity
     private NfcAdapter mNfcAdapter;
 
     public void addMessage(View view) {
-        String newMessage = txtBoxAddMessage.getText().toString();
-        messagesToSendArray.add(newMessage);
-
+        byte[] newMessage = txtBoxAddMessage.getText().toString().getBytes();
+        Scheme scheme = new Scheme(2, 2);
+        Map<Integer, byte[]> shares = scheme.split(newMessage);
+        if(shares.get(1) != null) {
+            messagesToSendArray.add(shares.get(1));
+        }
+        if(shares.get(2) != null){
+            myShare = shares.get(2);
+        }
         txtBoxAddMessage.setText(null);
         updateTextViews();
 
         Toast.makeText(this, "Added Message", Toast.LENGTH_LONG).show();
+    }
+
+    public void sendBackReceivedMessages(View view) {
+        for(byte[] bytes : messagesReceivedArray){
+            messagesToSendArray.add(bytes);
+        }
+        Toast.makeText(this, "Send back secret", Toast.LENGTH_LONG).show();
     }
 
 
@@ -46,7 +64,7 @@ public class KeySharing extends Activity
         txtMessagesToSend.setText("Messages To Send:\n");
         if(messagesToSendArray.size() > 0) {
             for (int i = 0; i < messagesToSendArray.size(); i++) {
-                txtMessagesToSend.append(messagesToSendArray.get(i));
+                txtMessagesToSend.append(new String(messagesToSendArray.get(i)));
                 txtMessagesToSend.append("\n");
             }
         }
@@ -54,7 +72,7 @@ public class KeySharing extends Activity
         txtReceivedMessages.setText("Messages Received:\n");
         if (messagesReceivedArray.size() > 0) {
             for (int i = 0; i < messagesReceivedArray.size(); i++) {
-                txtReceivedMessages.append(messagesReceivedArray.get(i));
+                txtReceivedMessages.append(new String(messagesReceivedArray.get(i)));
                 txtReceivedMessages.append("\n");
             }
         }
@@ -64,16 +82,16 @@ public class KeySharing extends Activity
     public void onSaveInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) return;
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putStringArrayList("messagesToSend", messagesToSendArray);
-        savedInstanceState.putStringArrayList("lastMessagesReceived",messagesReceivedArray);
+//        savedInstanceState.putByteArrayArrayList("messagesToSend", messagesToSendArray);
+//        savedInstanceState.putStringArrayList("lastMessagesReceived",messagesReceivedArray);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) return;
         super.onRestoreInstanceState(savedInstanceState);
-        messagesToSendArray = savedInstanceState.getStringArrayList("messagesToSend");
-        messagesReceivedArray = savedInstanceState.getStringArrayList("lastMessagesReceived");
+//        messagesToSendArray = savedInstanceState.getStringArrayList("messagesToSend");
+//        messagesReceivedArray = savedInstanceState.getStringArrayList("lastMessagesReceived");
     }
 
     @Override
@@ -128,8 +146,7 @@ public class KeySharing extends Activity
         NdefRecord[] records = new NdefRecord[messagesToSendArray.size() + 1];
 
         for (int i = 0; i < messagesToSendArray.size(); i++){
-            byte[] payload = messagesToSendArray.get(i).
-                    getBytes(Charset.forName("UTF-8"));
+            byte[] payload = messagesToSendArray.get(i);
 
             NdefRecord record = NdefRecord.createMime("text/plain",payload);
             records[i] = record;
@@ -152,12 +169,23 @@ public class KeySharing extends Activity
                 NdefRecord[] attachedRecords = receivedMessage.getRecords();
 
                 for (NdefRecord record:attachedRecords) {
-                    String string = new String(record.getPayload());
-                    if (string.equals(getPackageName())) { continue; }
-                    messagesReceivedArray.add(string);
+                    byte[] buddySecret = record.getPayload();
+                    if (new String(buddySecret).equals(getPackageName())) {
+                        continue;
+                    }
+                    System.out.println(new String(myShare) +  " Is my share");
+                    if(myShare!=null) {
+                        Scheme scheme = new Scheme(2, 2);
+                        Map<Integer, byte[]> map = new HashMap<>();
+                        map.put(1, buddySecret);
+                        map.put(2, myShare);
+                        byte[] secret = scheme.join(map);
+                        Toast.makeText(this, "Recovered secret" + new String(secret), Toast.LENGTH_LONG);
+                        System.out.println("Recovered secret" + new String(secret));
+                    }else{
+                        messagesReceivedArray.add(buddySecret);
+                    }
                 }
-                Toast.makeText(this, "Received " + messagesReceivedArray.size() +
-                        " Messages", Toast.LENGTH_LONG).show();
                 updateTextViews();
             }
             else {
