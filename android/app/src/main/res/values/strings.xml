@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">PassBuddies</string>
     <string name="action_settings">Settings</string>
+    <string name="name_input_label">Name</string>
+    <string name="secret_input_label">Secret</string>
+    <string name="button_create_shares">Create shares</string>
+    <string name="button_send_back_share">Send back share</string>
 </resources>

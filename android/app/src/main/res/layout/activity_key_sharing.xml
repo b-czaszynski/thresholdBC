@@ -4,33 +4,64 @@
     android:paddingRight="50dp" android:paddingTop="50dp"
     android:paddingBottom="50dp" tools:context=".KeySharing">
 
+
+    <TextView
+        android:id="@+id/txtBoxUserNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name_input_label"
+        />
     <EditText
-        android:id="@+id/txtBoxAddMessage"
+        android:id="@+id/txtBoxUserName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtBoxUserNameLabel"/>
+
+    <TextView
+        android:id="@+id/txtBoxSecretLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/secret_input_label"
+        android:layout_below="@+id/txtBoxUserName"
+        />
+    <EditText
+        android:id="@+id/txtBoxSecret"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtBoxSecretLabel"
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:id="@+id/buttonAddMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="addMessage"
-        android:layout_below="@+id/txtBoxAddMessage"
-        android:layout_centerHorizontal="true" />
+        android:onClick="createShares"
+        android:layout_below="@+id/txtBoxSecret"
+        android:layout_centerHorizontal="true"
+        android:text="@string/button_create_shares"/>
 
     <Button
         android:id="@+id/sendBackReceivedMessages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="sendBackReceivedMessages"
+        android:onClick="sendBackShare"
         android:layout_below="@+id/buttonAddMessage"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="@string/button_send_back_share"/>
 
+    <TextView
+        android:id="@+id/txtViewSecret"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sendBackReceivedMessages"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <TextView
         android:id="@+id/txtMessagesReceived"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sendBackReceivedMessages"
+        android:layout_below="@+id/txtViewSecret"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"/>
 
@@ -39,8 +70,9 @@
         android:id="@+id/txtMessageToSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/txtMessagesReceived"
+        android:layout_below="@+id/txtMessagesReceived"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
+
 
 </RelativeLayout>
