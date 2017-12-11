@@ -5,4 +5,7 @@
     <string name="secret_input_label">Secret</string>
     <string name="button_create_shares">Create shares</string>
     <string name="button_send_back_share">Send back share</string>
+    <string name="your_name_hint">Your name</string>
+    <string name="number_input_n_hint">N</string>
+    <string name="number_input_t_hint">T</string>
 </resources>

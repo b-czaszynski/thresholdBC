@@ -48,9 +48,9 @@ public class Scheme {
    * @return an {@code N}/{@code K} {@link Scheme}
    */
   public Scheme(int n, int k) {
-    //checkArgument(k > 1, "K must be > 1");
-    //checkArgument(n >= k, "N must be >= K");
-    //checkArgument(n <= 255, "N must be <= 255");
+    checkArgument(k > 1, "K must be > 1");
+    checkArgument(n >= k, "N must be >= K");
+    checkArgument(n <= 255, "N must be <= 255");
     this.n = n;
     this.k = k;
   }
