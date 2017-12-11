@@ -46,8 +46,8 @@ public class KeySharing extends Activity
     public void createShares(View view) {
         byte[] secret = txtBoxAddMessage.getText().toString().getBytes(StandardCharsets.UTF_8);
         String name = ((EditText)findViewById(R.id.txtBoxUserName)).getText().toString();
-        k = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
-        n = Integer.parseInt(((EditText)findViewById(R.id.numberInputK)).getText().toString());
+        n = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
+        k = Integer.parseInt(((EditText)findViewById(R.id.numberInputK)).getText().toString());
         Scheme scheme = new Scheme(k, n);
         Map<Integer, byte[]> shares = scheme.split(secret);
         if(shares.get(1) != null){
@@ -72,7 +72,7 @@ public class KeySharing extends Activity
 
     private  void updateTextViews() {
         txtViewUnsharedShares.setText("Shares not sent yet: " + myShares.size() + "/" + k +"\n");
-        txtViewReceivedShares.setText("Amount of received shares: "+ receivedShares.size() + "/" + k + "\n Needed to recover secret: " + k);
+        txtViewReceivedShares.setText("Amount of received shares: "+ receivedShares.size() + "/" + n + "\n Needed to recover secret: " + k);
     }
 
     @Override
