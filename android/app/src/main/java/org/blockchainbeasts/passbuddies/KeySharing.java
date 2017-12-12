@@ -16,64 +16,75 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codahale.shamir.Scheme;
+
+import org.json.JSONException;
+
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KeySharing extends Activity
         implements NfcAdapter.OnNdefPushCompleteCallback,
         NfcAdapter.CreateNdefMessageCallback {
-    private ArrayList<String> messagesToSendArray = new ArrayList<>();
-    private ArrayList<String> messagesReceivedArray = new ArrayList<>();
+    private ArrayList<Message> messagesToSendArray = new ArrayList<>();
+    private ArrayList<Message> messagesReceivedArray = new ArrayList<>();
+    private Map<Integer, Message> receivedShares = new HashMap<>();
+    private ArrayList<Message> myShares = new ArrayList<>();
 
     private EditText txtBoxAddMessage;
-    private TextView txtReceivedMessages;
-    private TextView txtMessagesToSend;
+    private TextView txtViewUnsharedShares;
+    private TextView txtViewReceivedShares;
+    private TextView txtViewSecret;
+    private int k = 2;
+    private int n = 2;
 
     private NfcAdapter mNfcAdapter;
 
-    public void addMessage(View view) {
-        String newMessage = txtBoxAddMessage.getText().toString();
-        messagesToSendArray.add(newMessage);
-
-        txtBoxAddMessage.setText(null);
+    public void createShares(View view) {
+        byte[] secret = txtBoxAddMessage.getText().toString().getBytes(StandardCharsets.UTF_8);
+        String name = ((EditText)findViewById(R.id.txtBoxUserName)).getText().toString();
+        n = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
+        k = Integer.parseInt(((EditText)findViewById(R.id.numberInputK)).getText().toString());
+        Scheme scheme = new Scheme(k, n);
+        Map<Integer, byte[]> shares = scheme.split(secret);
+        if(shares.get(1) != null){
+            receivedShares.put(1, new Message(shares.get(1), 1, name));
+        }
+        for(int i = 2; i<=k; i++) {
+            myShares.add( new Message(shares.get(i), i, name));
+        }
+        messagesToSendArray.add(myShares.remove(0));
         updateTextViews();
 
         Toast.makeText(this, "Added Message", Toast.LENGTH_LONG).show();
     }
 
+    public void sendBackShare(View view) {
+        for(Message m : messagesReceivedArray){
+            messagesToSendArray.add(m);
+        }
+        Toast.makeText(this, "Send back secret", Toast.LENGTH_LONG).show();
+    }
+
 
     private  void updateTextViews() {
-        txtMessagesToSend.setText("Messages To Send:\n");
-        if(messagesToSendArray.size() > 0) {
-            for (int i = 0; i < messagesToSendArray.size(); i++) {
-                txtMessagesToSend.append(messagesToSendArray.get(i));
-                txtMessagesToSend.append("\n");
-            }
-        }
-
-        txtReceivedMessages.setText("Messages Received:\n");
-        if (messagesReceivedArray.size() > 0) {
-            for (int i = 0; i < messagesReceivedArray.size(); i++) {
-                txtReceivedMessages.append(messagesReceivedArray.get(i));
-                txtReceivedMessages.append("\n");
-            }
-        }
+        txtViewUnsharedShares.setText("Shares not sent yet: " + myShares.size() + "/" + k +"\n");
+        txtViewReceivedShares.setText("Amount of received shares: "+ receivedShares.size() + "/" + n + "\n Needed to recover secret: " + k);
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) return;
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putStringArrayList("messagesToSend", messagesToSendArray);
-        savedInstanceState.putStringArrayList("lastMessagesReceived",messagesReceivedArray);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) return;
         super.onRestoreInstanceState(savedInstanceState);
-        messagesToSendArray = savedInstanceState.getStringArrayList("messagesToSend");
-        messagesReceivedArray = savedInstanceState.getStringArrayList("lastMessagesReceived");
     }
 
     @Override
@@ -81,12 +92,12 @@ public class KeySharing extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_key_sharing);
 
-        txtBoxAddMessage = findViewById(R.id.txtBoxAddMessage);
-        txtMessagesToSend = findViewById(R.id.txtMessageToSend);
-        txtReceivedMessages = findViewById(R.id.txtMessagesReceived);
+        txtBoxAddMessage = findViewById(R.id.txtBoxSecret);
+        txtViewReceivedShares = findViewById(R.id.txtViewReceivedShares);
+        txtViewUnsharedShares = findViewById(R.id.txtViewUnsharedShares);
+        txtViewSecret = findViewById(R.id.txtViewSecret);
         Button btnAddMessage = findViewById(R.id.buttonAddMessage);
 
-        btnAddMessage.setText("Add Message");
         updateTextViews();
 
         int result = checkSelfPermission(Manifest.permission.NFC);
@@ -112,6 +123,10 @@ public class KeySharing extends Activity
     @Override
     public void onNdefPushComplete(NfcEvent event) {
         messagesToSendArray.clear();
+        if(myShares.size()>0) {
+            messagesToSendArray.add(myShares.remove(0));
+        }
+        updateTextViews();
     }
 
     @Override
@@ -128,11 +143,14 @@ public class KeySharing extends Activity
         NdefRecord[] records = new NdefRecord[messagesToSendArray.size() + 1];
 
         for (int i = 0; i < messagesToSendArray.size(); i++){
-            byte[] payload = messagesToSendArray.get(i).
-                    getBytes(Charset.forName("UTF-8"));
-
-            NdefRecord record = NdefRecord.createMime("text/plain",payload);
-            records[i] = record;
+            try {
+                byte[] payload = messagesToSendArray.get(i).toJSON().getBytes(StandardCharsets.UTF_8);
+                NdefRecord record = NdefRecord.createMime("text/plain",payload);
+                records[i] = record;
+            }catch(JSONException e) {
+                e.printStackTrace();
+                return new NdefRecord[0];
+            }
         }
 
         records[messagesToSendArray.size()] =
@@ -150,20 +168,42 @@ public class KeySharing extends Activity
                 messagesReceivedArray.clear();
                 NdefMessage receivedMessage = (NdefMessage) receivedArray[0];
                 NdefRecord[] attachedRecords = receivedMessage.getRecords();
-
                 for (NdefRecord record:attachedRecords) {
-                    String string = new String(record.getPayload());
-                    if (string.equals(getPackageName())) { continue; }
-                    messagesReceivedArray.add(string);
+                    byte[] buddySecretBytes = record.getPayload();
+                    if (new String(buddySecretBytes, StandardCharsets.UTF_8).equals(getPackageName())) {
+                        continue;
+                    }
+                    Message buddySecretMessage;
+                    try {
+                        buddySecretMessage = new Message(new String(buddySecretBytes, StandardCharsets.UTF_8));
+                        messagesReceivedArray.add(buddySecretMessage);
+                        System.out.println(buddySecretMessage.toJSON());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                    receivedShares.put(buddySecretMessage.getShareNumber(), buddySecretMessage);
+                    if(receivedShares.size() >= n){
+                        recoverSecret();
+                    }
                 }
-                Toast.makeText(this, "Received " + messagesReceivedArray.size() +
-                        " Messages", Toast.LENGTH_LONG).show();
                 updateTextViews();
             }
             else {
                 Toast.makeText(this, "Received Blank Parcel", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void recoverSecret() {
+        Scheme scheme = new Scheme(k, n);
+        Map<Integer, byte[]> map = new HashMap<>();
+        for(Message m : receivedShares.values()) {
+            map.put(m.getShareNumber(), m.getShare());
+        }
+        byte[] secret = scheme.join(map);
+        Toast.makeText(this, "Recovered secret" + new String(secret, StandardCharsets.UTF_8), Toast.LENGTH_LONG);
+        txtViewSecret.setText("Recovered secret: "+ new String(secret, StandardCharsets.UTF_8));
     }
 
     @Override

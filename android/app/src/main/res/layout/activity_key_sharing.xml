@@ -5,33 +5,108 @@
     android:paddingBottom="50dp" tools:context=".KeySharing">
 
     <EditText
-        android:id="@+id/txtBoxAddMessage"
+        android:id="@+id/txtBoxUserName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/buttonAddMessage"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="addMessage"
-        android:layout_below="@+id/txtBoxAddMessage"
-        android:layout_centerHorizontal="true" />
+        android:hint='@string/your_name_hint'/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/numberinputLayout"
+        android:layout_below="@+id/txtBoxUserName"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+
+        <TextView
+            android:id="@+id/numberInputKLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="K: "
+            />
+        <EditText
+            android:id="@+id/numberInputK"
+            android:inputType="number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/numberInputNLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="N: "
+            />
+        <EditText
+            android:id="@+id/numberInputN"
+            android:inputType="number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"/>
+    </LinearLayout>
+
 
     <TextView
-        android:id="@+id/txtMessagesReceived"
+        android:id="@+id/txtBoxSecretLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonAddMessage"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
+        android:text="@string/secret_input_label"
+        android:layout_below="@+id/numberinputLayout"
+        />
+    <EditText
+        android:id="@+id/txtBoxSecret"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtBoxSecretLabel"
+        android:layout_centerHorizontal="true"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonLayout"
+        android:layout_below="@+id/txtBoxSecret">
+        <Button
+            android:id="@+id/buttonAddMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="createShares"
+            android:text="@string/button_create_shares"/>
+
+        <Button
+            android:id="@+id/sendBackReceivedMessages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="sendBackShare"
+            android:text="@string/button_send_back_share"/>
+    </LinearLayout>
 
 
     <TextView
-        android:id="@+id/txtMessageToSend"
+        android:id="@+id/txtViewSecret"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/txtMessagesReceived"
+        android:layout_below="@+id/buttonLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/txtViewUnsharedShares"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtViewSecret"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/txtViewReceivedShares"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtViewUnsharedShares"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
 
 </RelativeLayout>
