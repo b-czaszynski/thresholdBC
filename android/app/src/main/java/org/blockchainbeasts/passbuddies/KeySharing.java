@@ -2,7 +2,9 @@ package org.blockchainbeasts.passbuddies;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -24,7 +26,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class KeySharing extends Activity
         implements NfcAdapter.OnNdefPushCompleteCallback,
@@ -177,6 +181,7 @@ public class KeySharing extends Activity
                     try {
                         buddySecretMessage = new Message(new String(buddySecretBytes, StandardCharsets.UTF_8));
                         messagesReceivedArray.add(buddySecretMessage);
+                        storeMessage(buddySecretMessage);
                         System.out.println(buddySecretMessage.toJSON());
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -216,5 +221,43 @@ public class KeySharing extends Activity
         super.onResume();
         updateTextViews();
         handleNfcIntent(getIntent());
+    }
+
+    /**
+     *Returns a set of all messages (as JSON strings) of the given owner
+     * @param owner
+     * @return Set<String> Set of messages
+     */
+    public Set<String> retrieveMessages(String owner) {
+        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+        return preferences.contains(owner) ? preferences.getStringSet(owner, new HashSet<>()) : new HashSet<>();
+    }
+
+    /**
+     * Stores a Set<String> of all messages with the same owner under the key 'owner'.
+     * @param message
+     */
+    private void storeMessage(Message message) {
+        if(message == null) return;
+        try{
+            SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+
+            Set<String> messageSet;
+            try{
+                messageSet = preferences.getStringSet(message.getOwner(), new HashSet<>());
+            }catch(ClassCastException e){
+                messageSet = new HashSet<>();
+            }
+
+            messageSet.add(message.toJSON());
+
+            SharedPreferences.Editor edit = preferences.edit();
+            edit.putStringSet(message.getOwner(),messageSet);
+            edit.commit();
+
+        } catch (JSONException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace().toString());
+        }
     }
 }

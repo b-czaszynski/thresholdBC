@@ -46,4 +46,7 @@ public class Message {
     public int getShareNumber() {
         return shareNumber;
     }
+
+    public String getOwner() { return owner; }
+
 }
