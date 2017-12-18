@@ -48,7 +48,7 @@ public class KeySharing extends Activity
         String name = ((EditText)findViewById(R.id.txtBoxUserName)).getText().toString();
         n = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
         k = Integer.parseInt(((EditText)findViewById(R.id.numberInputK)).getText().toString());
-        Scheme scheme = new Scheme(k, n);
+        Scheme scheme = new Scheme(n, k);
         Map<Integer, byte[]> shares = scheme.split(secret);
         if(shares.get(1) != null){
             receivedShares.put(1, new Message(shares.get(1), 1, name));
@@ -183,7 +183,7 @@ public class KeySharing extends Activity
                         return;
                     }
                     receivedShares.put(buddySecretMessage.getShareNumber(), buddySecretMessage);
-                    if(receivedShares.size() >= n){
+                    if(receivedShares.size() >= k){
                         recoverSecret();
                     }
                 }
@@ -196,7 +196,7 @@ public class KeySharing extends Activity
     }
 
     private void recoverSecret() {
-        Scheme scheme = new Scheme(k, n);
+        Scheme scheme = new Scheme(n, k);
         Map<Integer, byte[]> map = new HashMap<>();
         for(Message m : receivedShares.values()) {
             map.put(m.getShareNumber(), m.getShare());
