@@ -79,8 +79,8 @@
             android:id="@+id/sendBackReceivedMessages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="sendBackShare"
-            android:text="@string/button_send_back_share"/>
+            android:onClick="viewReceivedShares"
+            android:text="@string/view_shares"/>
     </LinearLayout>
 
 

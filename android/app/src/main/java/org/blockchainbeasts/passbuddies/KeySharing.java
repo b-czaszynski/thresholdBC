@@ -62,11 +62,8 @@ public class KeySharing extends Activity
         Toast.makeText(this, "Added Message", Toast.LENGTH_LONG).show();
     }
 
-    public void sendBackShare(View view) {
-        for(Message m : messagesReceivedArray){
-            messagesToSendArray.add(m);
-        }
-        Toast.makeText(this, "Send back secret", Toast.LENGTH_LONG).show();
+    public void viewReceivedShares(View view) {
+        startActivity(new Intent(this, ListSharesActivity.class));
     }
 
 
