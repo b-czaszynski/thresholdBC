@@ -32,7 +32,7 @@ public class StorageHandler {
      * Stores a Set<String> of all messages with the same owner under the key 'owner'.
      * @param message
      */
-    private void storeMessage(Message message) {
+    public void storeMessage(Message message) {
         if(message == null) return;
         try{
             SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
