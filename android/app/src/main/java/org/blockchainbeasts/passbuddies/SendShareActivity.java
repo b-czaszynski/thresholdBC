@@ -42,6 +42,7 @@ public class SendShareActivity extends AppCompatActivity  implements NfcAdapter.
         }
         // Register callback
         mNfcAdapter.setNdefPushMessageCallback(this, this);
+        mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
     }
 
     public void cancelSending(View view) {
@@ -71,6 +72,7 @@ public class SendShareActivity extends AppCompatActivity  implements NfcAdapter.
 
     @Override
     public void onNdefPushComplete(NfcEvent nfcEvent) {
+        System.out.println("Succesfully send over nfc");
         finish();
     }
 }
