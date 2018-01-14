@@ -88,7 +88,6 @@ public class RecoverSecretActivity extends AppCompatActivity {
                     try {
                         buddySecretMessage = new Message(new String(buddySecretBytes, StandardCharsets.UTF_8));
                         messagesReceivedArray.add(buddySecretMessage);
-                        StorageHandler.storeMessage(this, buddySecretMessage);
                         System.out.println(buddySecretMessage.toJSON());
                     } catch (JSONException e) {
                         e.printStackTrace();

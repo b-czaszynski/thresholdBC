@@ -40,9 +40,6 @@ public class SendShareActivity extends AppCompatActivity  implements NfcAdapter.
             finish();
             return;
         }
-        // Register callback
-        mNfcAdapter.setNdefPushMessageCallback(this, this);
-        mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
     }
 
     public void cancelSending(View view) {
@@ -65,10 +62,18 @@ public class SendShareActivity extends AppCompatActivity  implements NfcAdapter.
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
+        System.out.println("Hereheefohef" );
         NdefRecord[] recordsToAttach = createRecords();
         return new NdefMessage(recordsToAttach);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Register callback
+        mNfcAdapter.setNdefPushMessageCallback(this, this);
+        mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
+    }
 
     @Override
     public void onNdefPushComplete(NfcEvent nfcEvent) {

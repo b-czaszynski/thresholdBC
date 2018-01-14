@@ -30,7 +30,9 @@ public class ListSharesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_shares);
-        shares = StorageHandler.retrieveMessages(this, "dorian");
+        shares = StorageHandler.retrieveMessages(this, "fff");
+        //TODO sort by owner
+        //TODO support multiple owners
         ArrayList<String > shareStrings = new ArrayList<>();
         for(Message m : shares ) {
             try {

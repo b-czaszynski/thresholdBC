@@ -12,4 +12,6 @@
     <string name="view_shares">View shares</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_recover_secret">RecoverSecretActivity</string>
+    <string name="title_activity_create_shares">CreateSharesActivity</string>
+    <string name="title_activity_received_share">ReceivedShareActivity</string>
 </resources>
