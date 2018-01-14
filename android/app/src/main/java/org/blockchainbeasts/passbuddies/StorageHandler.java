@@ -12,35 +12,39 @@ public class StorageHandler {
 
     public static final String PREFERENCE_NAME = "keyshare";
 
-    private Context context;
-
-    public StorageHandler(Context context){
-        this.context = context;
-    }
-
     /**
      *Returns a set of all messages (as JSON strings) of the given owner
      * @param owner
-     * @return Set<String> Set of messages
+     * @return Set<String> Set of messages or null
      */
-    public Set<String> retrieveMessages(String owner) throws ClassCastException {
+    public static Set<Message> retrieveMessages(Context context, String owner) throws ClassCastException {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        return preferences.contains(owner) ? preferences.getStringSet(owner, new HashSet<>()) : new HashSet<>();
+        Set<String> set =  preferences.contains(owner) ? preferences.getStringSet(owner, new HashSet<>()) : new HashSet<>();
+        Set<Message> messageSet = new HashSet<>();
+        for(String s : set){
+            try {
+                messageSet.add(new Message(s));
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return messageSet;
     }
 
     /**
      * Stores a Set<String> of all messages with the same owner under the key 'owner'.
      * @param message
      */
-    public void storeMessage(Message message) {
+    public static void storeMessage(Context context, Message message) {
         if(message == null) return;
         try{
             SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
 
             Set<String> messageSet;
-            try{
+
+            if(preferences.contains(message.getOwner())){
                 messageSet = preferences.getStringSet(message.getOwner(), new HashSet<>());
-            }catch(ClassCastException e){
+            }else {
                 messageSet = new HashSet<>();
             }
 
@@ -52,7 +56,7 @@ public class StorageHandler {
 
         } catch (JSONException e) {
             System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace().toString());
+            e.printStackTrace();
         }
     }
 }

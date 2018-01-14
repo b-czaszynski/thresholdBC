@@ -10,4 +10,6 @@
     <string name="number_input_t_hint">T</string>
     <string name="button_delete_share">Delete share</string>
     <string name="view_shares">View shares</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_recover_secret">RecoverSecretActivity</string>
 </resources>

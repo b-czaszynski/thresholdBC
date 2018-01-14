@@ -4,6 +4,8 @@ package org.blockchainbeasts.passbuddies;
  * Created by dorian on 10-12-17.
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Represents an message containing a key share
  */
-public class Message {
+public class Message implements Parcelable {
     private byte[] share;
     private int shareNumber;
     private String owner;
@@ -49,4 +51,34 @@ public class Message {
 
     public String getOwner() { return owner; }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(owner);
+        parcel.writeInt(shareNumber);
+        parcel.writeString(Base64.encodeToString(share, Base64.DEFAULT));
+    }
+
+    public Message(Parcel parcel) {
+        this.owner  = parcel.readString();
+        this.shareNumber = parcel.readInt();
+        this.share = Base64.decode(parcel.readString(), Base64.DEFAULT);
+    }
+
+    public static final Parcelable.Creator<Message> CREATOR = new Parcelable.Creator<Message>() {
+
+        @Override
+        public Message createFromParcel(Parcel parcel) {
+            return new Message(parcel);
+        }
+
+        @Override
+        public Message[] newArray(int size) {
+            return new Message[0];
+        }
+    };
 }

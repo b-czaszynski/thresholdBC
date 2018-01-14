@@ -31,8 +31,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class KeySharing extends Activity
-        implements NfcAdapter.OnNdefPushCompleteCallback,
-        NfcAdapter.CreateNdefMessageCallback {
+//        implements NfcAdapter.OnNdefPushCompleteCallback,         NfcAdapter.CreateNdefMessageCallback
+ {
     private ArrayList<Message> messagesToSendArray = new ArrayList<>();
     private ArrayList<Message> messagesReceivedArray = new ArrayList<>();
     private Map<Integer, Message> receivedShares = new HashMap<>();
@@ -110,151 +110,107 @@ public class KeySharing extends Activity
             requestPermissions(new String[] {Manifest.permission.NFC}, 0);
         }
 
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if(mNfcAdapter != null) {
-            mNfcAdapter.setNdefPushMessageCallback(this, this);
-            mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
-        }
-        else {
-            Toast.makeText(this, "NFC not available on this device",
-                    Toast.LENGTH_SHORT).show();
-        }
+//        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+//        if(mNfcAdapter != null) {
+//            mNfcAdapter.setNdefPushMessageCallback(this, this);
+//            mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
+//        }
+//        else {
+//            Toast.makeText(this, "NFC not available on this device",
+//                    Toast.LENGTH_SHORT).show();
+//        }
     }
 
-    @Override
-    public void onNdefPushComplete(NfcEvent event) {
-        messagesToSendArray.clear();
-        if(myShares.size()>0) {
-            messagesToSendArray.add(myShares.remove(0));
-        }
-        updateTextViews();
-    }
+//    @Override
+//    public void onNdefPushComplete(NfcEvent event) {
+//        messagesToSendArray.clear();
+//        if(myShares.size()>0) {
+//            messagesToSendArray.add(myShares.remove(0));
+//        }
+//        updateTextViews();
+//    }
+//
+//    @Override
+//    public NdefMessage createNdefMessage(NfcEvent event) {
+//        if (messagesToSendArray.size() == 0) {
+//            return null;
+//        }
+//        NdefRecord[] recordsToAttach = createRecords();
+//        return new NdefMessage(recordsToAttach);
+//    }
+//
+//    public NdefRecord[] createRecords() {
+//
+//        NdefRecord[] records = new NdefRecord[messagesToSendArray.size() + 1];
+//
+//        for (int i = 0; i < messagesToSendArray.size(); i++){
+//            try {
+//                byte[] payload = messagesToSendArray.get(i).toJSON().getBytes(StandardCharsets.UTF_8);
+//                NdefRecord record = NdefRecord.createMime("text/plain",payload);
+//                records[i] = record;
+//            }catch(JSONException e) {
+//                e.printStackTrace();
+//                return new NdefRecord[0];
+//            }
+//        }
+//
+//        records[messagesToSendArray.size()] =
+//                NdefRecord.createApplicationRecord(this.getPackageName());
+//
+//        return records;
+//    }
 
-    @Override
-    public NdefMessage createNdefMessage(NfcEvent event) {
-        if (messagesToSendArray.size() == 0) {
-            return null;
-        }
-        NdefRecord[] recordsToAttach = createRecords();
-        return new NdefMessage(recordsToAttach);
-    }
+//    private void handleNfcIntent(Intent NfcIntent) {
+//        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(NfcIntent.getAction())) {
+//            Parcelable[] receivedArray =
+//                    NfcIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+//
+//            if(receivedArray != null) {
+//                messagesReceivedArray.clear();
+//                NdefMessage receivedMessage = (NdefMessage) receivedArray[0];
+//                NdefRecord[] attachedRecords = receivedMessage.getRecords();
+//                for (NdefRecord record:attachedRecords) {
+//                    byte[] buddySecretBytes = record.getPayload();
+//                    if (new String(buddySecretBytes, StandardCharsets.UTF_8).equals(getPackageName())) {
+//                        continue;
+//                    }
+//                    Message buddySecretMessage;
+//                    try {
+//                        buddySecretMessage = new Message(new String(buddySecretBytes, StandardCharsets.UTF_8));
+//                        messagesReceivedArray.add(buddySecretMessage);
+//                        StorageHandler.storeMessage(this, buddySecretMessage);
+//                        System.out.println(buddySecretMessage.toJSON());
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        return;
+//                    }
+//                    receivedShares.put(buddySecretMessage.getShareNumber(), buddySecretMessage);
+//                    if(receivedShares.size() >= k){
+//                        recoverSecret();
+//                    }
+//                }
+//                updateTextViews();
+//            }
+//            else {
+//                Toast.makeText(this, "Received Blank Parcel", Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
 
-    public NdefRecord[] createRecords() {
-
-        NdefRecord[] records = new NdefRecord[messagesToSendArray.size() + 1];
-
-        for (int i = 0; i < messagesToSendArray.size(); i++){
-            try {
-                byte[] payload = messagesToSendArray.get(i).toJSON().getBytes(StandardCharsets.UTF_8);
-                NdefRecord record = NdefRecord.createMime("text/plain",payload);
-                records[i] = record;
-            }catch(JSONException e) {
-                e.printStackTrace();
-                return new NdefRecord[0];
-            }
-        }
-
-        records[messagesToSendArray.size()] =
-                NdefRecord.createApplicationRecord(this.getPackageName());
-
-        return records;
-    }
-
-    private void handleNfcIntent(Intent NfcIntent) {
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(NfcIntent.getAction())) {
-            Parcelable[] receivedArray =
-                    NfcIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-
-            if(receivedArray != null) {
-                messagesReceivedArray.clear();
-                NdefMessage receivedMessage = (NdefMessage) receivedArray[0];
-                NdefRecord[] attachedRecords = receivedMessage.getRecords();
-                for (NdefRecord record:attachedRecords) {
-                    byte[] buddySecretBytes = record.getPayload();
-                    if (new String(buddySecretBytes, StandardCharsets.UTF_8).equals(getPackageName())) {
-                        continue;
-                    }
-                    Message buddySecretMessage;
-                    try {
-                        buddySecretMessage = new Message(new String(buddySecretBytes, StandardCharsets.UTF_8));
-                        messagesReceivedArray.add(buddySecretMessage);
-                        storeMessage(buddySecretMessage);
-                        System.out.println(buddySecretMessage.toJSON());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                    receivedShares.put(buddySecretMessage.getShareNumber(), buddySecretMessage);
-                    if(receivedShares.size() >= k){
-                        recoverSecret();
-                    }
-                }
-                updateTextViews();
-            }
-            else {
-                Toast.makeText(this, "Received Blank Parcel", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void recoverSecret() {
-        Scheme scheme = new Scheme(n, k);
-        Map<Integer, byte[]> map = new HashMap<>();
-        for(Message m : receivedShares.values()) {
-            map.put(m.getShareNumber(), m.getShare());
-        }
-        byte[] secret = scheme.join(map);
-        Toast.makeText(this, "Recovered secret" + new String(secret, StandardCharsets.UTF_8), Toast.LENGTH_LONG);
-        txtViewSecret.setText("Recovered secret: "+ new String(secret, StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-        handleNfcIntent(intent);
-    }
+//
+//    @Override
+//    public void onNewIntent(Intent intent) {
+//        handleNfcIntent(intent);
+//    }
 
     @Override
     public void onResume() {
         super.onResume();
         updateTextViews();
-        handleNfcIntent(getIntent());
+//        handleNfcIntent(getIntent());
     }
 
-    /**
-     *Returns a set of all messages (as JSON strings) of the given owner
-     * @param owner
-     * @return Set<String> Set of messages
-     */
-    public Set<String> retrieveMessages(String owner) {
-        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-        return preferences.contains(owner) ? preferences.getStringSet(owner, new HashSet<>()) : new HashSet<>();
-    }
-
-    /**
-     * Stores a Set<String> of all messages with the same owner under the key 'owner'.
-     * @param message
-     */
-    private void storeMessage(Message message) {
-        if(message == null) return;
-        try{
-            SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-
-            Set<String> messageSet;
-            try{
-                messageSet = preferences.getStringSet(message.getOwner(), new HashSet<>());
-            }catch(ClassCastException e){
-                messageSet = new HashSet<>();
-            }
-
-            messageSet.add(message.toJSON());
-
-            SharedPreferences.Editor edit = preferences.edit();
-            edit.putStringSet(message.getOwner(),messageSet);
-            edit.commit();
-
-        } catch (JSONException e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace().toString());
-        }
-    }
+     public void recoverSecret(View view) {
+         startActivity(new Intent(this, RecoverSecretActivity.class));
+     }
 }

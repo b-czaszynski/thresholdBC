@@ -107,6 +107,11 @@
         android:layout_below="@+id/txtViewUnsharedShares"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
-
+    <Button
+        android:id="@+id/recoverSecretButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="recoverSecret"
+        android:text="Recover your secret"/>
 
 </RelativeLayout>

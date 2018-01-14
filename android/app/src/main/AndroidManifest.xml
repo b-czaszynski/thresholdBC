@@ -14,7 +14,7 @@
         android:label="PassBuddies"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".KeySharing"
             android:launchMode="singleTask">
@@ -23,15 +23,21 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
         </activity>
-        <activity android:name=".ListSharesActivity"></activity>
+        <activity android:name=".ListSharesActivity" />
+        <activity android:name=".SendShareActivity" />
+        <activity
+            android:name=".RecoverSecretActivity"
+            android:label="@string/title_activity_recover_secret"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.nfc.action.NDEF_DISCOVERED" />-->
+
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+
+                <!--<data android:mimeType="text/plain" />-->
+            <!--</intent-filter>-->
+        </activity>
     </application>
 
 </manifest>
