@@ -23,15 +23,15 @@ import java.util.Set;
 public class SendShareActivity extends AppCompatActivity  implements NfcAdapter.OnNdefPushCompleteCallback,
         NfcAdapter.CreateNdefMessageCallback{
     NfcAdapter mNfcAdapter;
-    Message message;
+    Secret secret;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        message = intent.getParcelableExtra("Message");
+        secret = intent.getParcelableExtra("Secret");
         setContentView(R.layout.activity_send_share);
-        ((TextView)findViewById(R.id.txtViewShareView)).setText("To return " +  message.getOwner() + "'s share with number: " + message.getShareNumber());
+        ((TextView)findViewById(R.id.txtViewShareView)).setText("To return " +  secret.getOwner());
 
         // Check for available NFC Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -50,7 +50,7 @@ public class SendShareActivity extends AppCompatActivity  implements NfcAdapter.
 
         NdefRecord[] records = new NdefRecord[2];
         try {
-            byte[] payload = message.toJSON().getBytes(StandardCharsets.UTF_8);
+            byte[] payload = secret.toJSON().getBytes(StandardCharsets.UTF_8);
             records[0] =  NdefRecord.createMime("text/plain",payload);
         }catch(JSONException e) {
             e.printStackTrace();

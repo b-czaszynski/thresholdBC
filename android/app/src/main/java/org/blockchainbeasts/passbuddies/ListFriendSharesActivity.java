@@ -2,38 +2,31 @@ package org.blockchainbeasts.passbuddies;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
-import java.util.Set;
 
 public class ListFriendSharesActivity extends Activity {
 
-    Set<Message> shares;
+    ArrayList<Secret> secrets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_friend_shares);
-        shares = StorageHandler.retrieveMessages(this, "fff");
+        secrets = SecretStorageHandler.retrieveAllSecrets(this);
         //TODO sort by owner
         //TODO support multiple owners
-        ArrayList<String > shareStrings = new ArrayList<>();
-        for(Message m : shares ) {
-            try {
-                shareStrings.add(m.getShare() + " " + m.getOwner() + " " + m.toJSON());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        ArrayList<String > secretStrings = new ArrayList<>();
+        for(Secret s : secrets) {
+            secretStrings.add(s.getOwner() + " " + s.getName() + " amount of shares I have: " + s.getShares().size());
         }
         ListView view =  (ListView)findViewById(R.id.share_list);
-        view.setAdapter(new ArrayAdapter(this, R.layout.sharelistitem, R.id.ownerNameId, shareStrings));
+        view.setAdapter(new ArrayAdapter(this, R.layout.sharelistitem, R.id.ownerNameId, secretStrings));
     }
 
     public void deleteShare(View view) {
@@ -42,7 +35,7 @@ public class ListFriendSharesActivity extends Activity {
 
     public void sendBackShare(View view) {
         Intent i = new Intent(this, SendShareActivity.class);
-        i.putExtra("Message", (Parcelable)shares.toArray()[0]);
+        i.putExtra("Message", (Parcelable)secrets.toArray()[0]);
         startActivity(i);
     }
 }

@@ -7,29 +7,23 @@
 
     <Button
         android:id="@+id/sendBackReceivedMessages"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="viewReceivedShares"
+        android:onClick="onClickViewReceivedSharesButton"
         android:text="@string/view_shares"/>
     <Button
         android:id="@+id/viewOwnSharesButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/sendBackReceivedMessages"
         android:onClick="onClickViewOnSharesButton"
         android:text="@string/view_own_shares"/>
     <Button
-        android:id="@+id/recoverSecretButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="recoverSecret"
-        android:layout_below="@+id/sendBackReceivedMessages"
-        android:text="Recover your secret"/>
-    <Button
         android:id="@+id/createSharesButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="createShares"
-        android:layout_below="@+id/recoverSecretButton"
+        android:onClick="onClickCreateSharesButton"
+        android:layout_below="@id/viewOwnSharesButton"
         android:text="Create shares"/>
 
 </RelativeLayout>

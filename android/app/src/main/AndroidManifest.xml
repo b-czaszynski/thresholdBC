@@ -35,6 +35,10 @@
             android:label="@string/title_activity_create_shares"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
+            android:name=".ListOwnSecretsActivity"
+            android:label="My shares"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".ReceivedShareActivity"
             android:label="@string/title_activity_received_share"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

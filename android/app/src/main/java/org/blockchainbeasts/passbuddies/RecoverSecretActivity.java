@@ -27,8 +27,8 @@ import java.util.Map;
 
 public class RecoverSecretActivity extends AppCompatActivity {
 
-    private ArrayList<Message> messagesReceivedArray = new ArrayList<>();
-    private Map<Integer, Message> receivedShares = new HashMap<>();
+    private ArrayList<Secret> receivedSecretsArray = new ArrayList<>();
+    private Map<Integer, Share> receivedShares = new HashMap<>();
     private int n = 2;
     private int k = 5;
     private IntentFilter[] mFilters;
@@ -77,7 +77,7 @@ public class RecoverSecretActivity extends AppCompatActivity {
 
             if(receivedArray != null) {
                 System.out.println("HANDLING NFC INTENT3");
-                messagesReceivedArray.clear();
+                receivedSecretsArray.clear();
                 NdefMessage receivedMessage = (NdefMessage) receivedArray[0];
                 NdefRecord[] attachedRecords = receivedMessage.getRecords();
                 for (NdefRecord record:attachedRecords) {
@@ -86,17 +86,19 @@ public class RecoverSecretActivity extends AppCompatActivity {
                     if (new String(buddySecretBytes, StandardCharsets.UTF_8).equals(getPackageName())) {
                         continue;
                     }
-                    Message buddySecretMessage;
+                    Secret buddySecret;
                     try {
-                        buddySecretMessage = new Message(new String(buddySecretBytes, StandardCharsets.UTF_8));
-                        messagesReceivedArray.add(buddySecretMessage);
-                        System.out.println(buddySecretMessage.toJSON());
+                        buddySecret = new Secret(new String(buddySecretBytes, StandardCharsets.UTF_8));
+                        receivedSecretsArray.add(buddySecret);
+                        System.out.println(buddySecret.toJSON());
                     } catch (JSONException e) {
                         e.printStackTrace();
                         return;
                     }
-                    System.out.println("RECEIVED SHARE" + buddySecretMessage.getOwner());
-                    receivedShares.put(buddySecretMessage.getShareNumber(), buddySecretMessage);
+                    System.out.println("RECEIVED SHARE" + buddySecret.getOwner());
+                    for(Share s : buddySecret.getShares()) {
+                        receivedShares.put(s.getShareNumber(), s);
+                    }
                     if(receivedShares.size() >= k){
                         recoverSecret();
                     }
@@ -111,12 +113,11 @@ public class RecoverSecretActivity extends AppCompatActivity {
     private void recoverSecret() {
         Scheme scheme = new Scheme(n, k);
         Map<Integer, byte[]> map = new HashMap<>();
-        for(Message m : receivedShares.values()) {
-            map.put(m.getShareNumber(), m.getShare());
+        for(Share s : receivedShares.values()) {
+            map.put(s.getShareNumber(), s.getBytes());
         }
         byte[] secret = scheme.join(map);
         Toast.makeText(this, "Recovered secret" + new String(secret, StandardCharsets.UTF_8), Toast.LENGTH_LONG);
-//        txtViewSecret.setText("Recovered secret: "+ new String(secret, StandardCharsets.UTF_8));
         //TODO show secret
     }
 

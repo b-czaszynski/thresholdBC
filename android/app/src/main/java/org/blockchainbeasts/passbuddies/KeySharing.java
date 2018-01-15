@@ -12,14 +12,6 @@ import android.widget.Toast;
 
 public class KeySharing extends Activity{
 
-    public void createShares(View view) {
-        startActivity(new Intent(this, CreateSharesActivity.class));
-    }
-
-    public void viewReceivedShares(View view) {
-        startActivity(new Intent(this, ListFriendSharesActivity.class));
-    }
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) return;
@@ -49,12 +41,16 @@ public class KeySharing extends Activity{
         NfcAdapter.getDefaultAdapter(this).setNdefPushMessage(null, this);
     }
 
+    public void onClickViewOnSharesButton(View view){
+        startActivity(new Intent(this, ListOwnSecretsActivity.class));
+    }
 
-     public void recoverSecret(View view) {
-         startActivity(new Intent(this, RecoverSecretActivity.class));
-     }
+    public void onClickCreateSharesButton(View view) {
+        startActivity(new Intent(this, CreateSharesActivity.class));
+    }
 
-     public void onClickViewOnSharesButton(View view){
-        startActivity(new Intent(this, ListOwnSharesActivity.class));
-     }
- }
+    public void onClickViewReceivedSharesButton(View view) {
+        startActivity(new Intent(this, ListFriendSharesActivity.class));
+    }
+
+}

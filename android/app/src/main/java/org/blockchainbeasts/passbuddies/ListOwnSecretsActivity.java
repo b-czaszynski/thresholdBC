@@ -14,37 +14,29 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class ListOwnSharesActivity extends Activity {
+public class ListOwnSecretsActivity extends Activity {
 
-    Set<Message> shares;
+    ArrayList<Secret> secrets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_own_shares);
-        shares = StorageHandler.retrieveMessages(this, "");
+        secrets = SecretStorageHandler.retrieveAllSecrets(this);
         //TODO sort by owner
         //TODO support multiple owners
         ArrayList<String > shareStrings = new ArrayList<>();
-        for(Message m : shares ) {
-            try {
-                shareStrings.add(m.getShare() + " " + m.getOwner() + " " + m.toJSON());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        for(Secret s : secrets ) {
+                shareStrings.add(s.getOwner() + " " + s.getName()  + " n:" + s.getN() + ",k:" + s.getK());
         }
-        ListView view =  (ListView)findViewById(R.id.share_list);
+        ListView view = findViewById(R.id.share_list);
         view.setAdapter(new ArrayAdapter(this, R.layout.ownsharelistitem, R.id.ownerNameId, shareStrings));
         //TODO not on view but on button
-        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int
-                    position,long arg3) {
-                //add validation email is already selected
-                Intent i = new Intent(view.getContext(), RecoverSecretActivity.class);
-                i.putExtra("Message", (Parcelable)shares.toArray()[position]);
-                startActivity(i);
-            }
+        view.setOnItemClickListener((parent, view1, position, arg3) -> {
+            //add validation email is already selected
+            Intent i = new Intent(view1.getContext(), RecoverSecretActivity.class);
+            i.putExtra("Message", (Parcelable)secrets.toArray()[position]);
+            startActivity(i);
         });
     }
 
@@ -53,6 +45,6 @@ public class ListOwnSharesActivity extends Activity {
     }
 
     public void recoverSecret(View view) {
-
+        System.out.println("Trying to recover secret");
     }
 }

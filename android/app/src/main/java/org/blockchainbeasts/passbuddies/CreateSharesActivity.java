@@ -1,13 +1,10 @@
 package org.blockchainbeasts.passbuddies;
 
-import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -24,7 +21,7 @@ import java.util.Map;
 public class CreateSharesActivity extends AppCompatActivity implements NfcAdapter.OnNdefPushCompleteCallback,
         NfcAdapter.CreateNdefMessageCallback{
 
-    private ArrayList<Message> messagesToSendArray;
+    private ArrayList<Secret> messagesToSendArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +43,24 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
         int n = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
         int k = Integer.parseInt(((EditText)findViewById(R.id.numberInputK)).getText().toString());
         Scheme scheme = new Scheme(n, k);
-        Map<Integer, byte[]> shares = scheme.split(secret);
-        if(shares.get(1) != null){
+        Map<Integer, byte[]> sharesBytes = scheme.split(secret);
+        ArrayList<Share> shares = new ArrayList<>();
+        for(int key : sharesBytes.keySet()){
+            shares.add(new Share(sharesBytes.get(key), key));
+        }
+        if(shares.get(0) != null){
             try {
-                StorageHandler.storeMessage(this, new Message(shares.get(1), 1, "", name));
+                Secret s = new Secret("me", name, n, k);
+                s.addShare(shares.remove(0));
+                SecretStorageHandler.storeSecret(this, s);
             }catch(JSONException e){
                 e.printStackTrace();
             }
         }
-        for(int i = 2; i<=n; i++) {
-            messagesToSendArray.add(new Message(shares.get(i), i, "", name));
+        while(!shares.isEmpty()){
+            Secret s = new Secret("", name);
+            s.addShare(shares.remove(0));
+            messagesToSendArray.add(s);
         }
         // Register callback for nfc (i.e. enable nfcf)
         System.out.println("ENABLING NFC" );

@@ -6,11 +6,8 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,9 +47,9 @@ public class ReceivedShareActivity extends AppCompatActivity {
                     if (!new String(record.getPayload(), StandardCharsets.UTF_8).equals(getPackageName())) {
                         System.out.println("STORING MESSAGE"  + new String(record.getPayload(), StandardCharsets.UTF_8));
                         try {
-                            System.out.println("STORING MESSAGEFF"  + new Message(new String(record.getPayload(), StandardCharsets.UTF_8)).toJSON());
-                            StorageHandler.storeMessage(this, new Message(new String(record.getPayload(), StandardCharsets.UTF_8)));
-                            ((TextView)findViewById(R.id.txtViewReceivedShare)).setText(((Message)StorageHandler.retrieveMessages(this, "fff").toArray()[0]).toJSON());
+                            System.out.println("STORING MESSAGEFF"  + new Secret(new String(record.getPayload(), StandardCharsets.UTF_8)).toJSON());
+                            SecretStorageHandler.storeSecret(this, new Secret(new String(record.getPayload(), StandardCharsets.UTF_8)));
+                            ((TextView)findViewById(R.id.txtViewReceivedShare)).setText(((Secret) SecretStorageHandler.retrieveAllSecrets(this).toArray()[0]).toJSON());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
