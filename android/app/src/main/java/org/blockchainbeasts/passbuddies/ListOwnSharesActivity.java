@@ -33,7 +33,7 @@ public class ListOwnSharesActivity extends Activity {
             }
         }
         ListView view =  (ListView)findViewById(R.id.share_list);
-        view.setAdapter(new ArrayAdapter(this, R.layout.sharelistitem, R.id.ownerNameId, shareStrings));
+        view.setAdapter(new ArrayAdapter(this, R.layout.ownsharelistitem, R.id.ownerNameId, shareStrings));
     }
 
     public void deleteShare(View view) {
