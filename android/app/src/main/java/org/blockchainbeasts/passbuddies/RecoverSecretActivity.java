@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codahale.shamir.Scheme;
@@ -26,8 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RecoverSecretActivity extends AppCompatActivity {
-
-    private Map<Integer, Share> receivedShares = new HashMap<>();
 
     private Secret secretToRecover;
     private PendingIntent pendingIntent;
@@ -74,11 +73,11 @@ public class RecoverSecretActivity extends AppCompatActivity {
                     Secret buddySecret;
                     try {
                         buddySecret = new Secret(new String(buddySecretBytes, StandardCharsets.UTF_8));
-                        if(secretToRecover.getName().equals(buddySecret.getName())
-                                && secretToRecover.getOwner().equals(buddySecret.getOwner())){
+//                        if(secretToRecover.getName().equals(buddySecret.getName())
+//                                && secretToRecover.getOwner().equals(buddySecret.getOwner())){
                             for(Share s : buddySecret.getShares()) {
                                 secretToRecover.addShare(s);
-                            }
+//                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -89,8 +88,9 @@ public class RecoverSecretActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    if(receivedShares.size() >= secretToRecover.getK()){
-                       System.out.println("Secret:" + secretToRecover.recoverSecret());
+                    ((TextView)findViewById(R.id.txtViewProgress)).setText("Recovered: " + secretToRecover.getShares().size() + "out of " + secretToRecover.getK() + " needed to recover secret");
+                    if(secretToRecover.getShares().size() >= secretToRecover.getK()){
+                        ((TextView)findViewById(R.id.txtViewProgress)).setText("Recovered secret:" + secretToRecover.recoverSecret());
                     }
                 }
             }
