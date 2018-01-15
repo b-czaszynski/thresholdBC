@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -34,15 +35,24 @@ public class ListOwnSharesActivity extends Activity {
         }
         ListView view =  (ListView)findViewById(R.id.share_list);
         view.setAdapter(new ArrayAdapter(this, R.layout.ownsharelistitem, R.id.ownerNameId, shareStrings));
+        //TODO not on view but on button
+        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int
+                    position,long arg3) {
+                //add validation email is already selected
+                Intent i = new Intent(view.getContext(), RecoverSecretActivity.class);
+                i.putExtra("Message", (Parcelable)shares.toArray()[position]);
+                startActivity(i);
+            }
+        });
     }
 
     public void deleteShare(View view) {
         System.out.println("Trying to delete share");
     }
 
-    public void sendBackShare(View view) {
-        Intent i = new Intent(this, SendShareActivity.class);
-        i.putExtra("Message", (Parcelable)shares.toArray()[0]);
-        startActivity(i);
+    public void recoverSecret(View view) {
+
     }
 }
