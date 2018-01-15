@@ -18,12 +18,13 @@ import java.nio.charset.StandardCharsets;
 public class Message implements Parcelable {
     private byte[] share;
     private int shareNumber;
-    private String owner;
+    private String owner, shareName;
 
-    public Message(byte[] share, int shareNumber, String owner) {
+    public Message(byte[] share, int shareNumber, String owner, String shareName) {
         this.share = share;
         this.shareNumber = shareNumber;
         this.owner = owner;
+        this.shareName = shareName;
     }
 
     public Message(String json) throws JSONException {
@@ -31,6 +32,7 @@ public class Message implements Parcelable {
         this.share = Base64.decode(obj.getString("share"), Base64.DEFAULT);
         this.shareNumber = obj.getInt("shareNumber");
         this.owner = obj.getString("owner");
+        this.shareName = obj.getString("shareName");
     }
 
     public String toJSON() throws JSONException {
@@ -38,6 +40,7 @@ public class Message implements Parcelable {
         jsonobj.put("share", new String(Base64.encode(getShare(), Base64.DEFAULT)));
         jsonobj.put("shareNumber", shareNumber);
         jsonobj.put("owner", owner);
+        jsonobj.put("shareName", shareName);
         return jsonobj.toString();
     }
 
@@ -51,6 +54,8 @@ public class Message implements Parcelable {
 
     public String getOwner() { return owner; }
 
+    public String getShareName() {return shareName;}
+
     @Override
     public int describeContents() {
         return 0;
@@ -59,12 +64,14 @@ public class Message implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(owner);
+        parcel.writeString(shareName);
         parcel.writeInt(shareNumber);
         parcel.writeString(Base64.encodeToString(share, Base64.DEFAULT));
     }
 
     public Message(Parcel parcel) {
         this.owner  = parcel.readString();
+        this.shareName = parcel.readString();
         this.shareNumber = parcel.readInt();
         this.share = Base64.decode(parcel.readString(), Base64.DEFAULT);
     }

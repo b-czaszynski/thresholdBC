@@ -42,20 +42,20 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
 
     public void createShares(View view) {
         byte[] secret =  ((EditText)findViewById(R.id.txtBoxSecret)).getText().toString().getBytes(StandardCharsets.UTF_8);
-        String name = ((EditText)findViewById(R.id.txtBoxUserName)).getText().toString();
+        String name = ((EditText)findViewById(R.id.txtBoxSecretName)).getText().toString();
         int n = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
         int k = Integer.parseInt(((EditText)findViewById(R.id.numberInputK)).getText().toString());
         Scheme scheme = new Scheme(n, k);
         Map<Integer, byte[]> shares = scheme.split(secret);
         if(shares.get(1) != null){
             try {
-                StorageHandler.storeMessage(this, new Message(shares.get(1), 1, name));
+                StorageHandler.storeMessage(this, new Message(shares.get(1), 1, "", name));
             }catch(JSONException e){
                 e.printStackTrace();
             }
         }
         for(int i = 2; i<=n; i++) {
-            messagesToSendArray.add(new Message(shares.get(i), i, name));
+            messagesToSendArray.add(new Message(shares.get(i), i, "", name));
         }
         // Register callback for nfc (i.e. enable nfcf)
         System.out.println("ENABLING NFC" );

@@ -53,4 +53,8 @@ public class KeySharing extends Activity{
      public void recoverSecret(View view) {
          startActivity(new Intent(this, RecoverSecretActivity.class));
      }
+
+     public void onClickViewOnSharesButton(View view){
+        startActivity(new Intent(this, ListOwnSharesActivity.class));
+     }
  }

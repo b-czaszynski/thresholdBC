@@ -9,9 +9,10 @@
     <string name="number_input_n_hint">N</string>
     <string name="number_input_t_hint">T</string>
     <string name="button_delete_share">Delete share</string>
-    <string name="view_shares">View shares</string>
+    <string name="view_shares">View friend shares</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_recover_secret">RecoverSecretActivity</string>
     <string name="title_activity_create_shares">CreateSharesActivity</string>
     <string name="title_activity_received_share">ReceivedShareActivity</string>
+    <string name="view_own_shares" >View my Shares</string>
 </resources>
