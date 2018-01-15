@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import org.json.JSONException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ public class ListOwnSecretsActivity extends Activity {
 
     ArrayList<Secret> secrets;
     ArrayAdapter<Secret> adapter;
+    ArrayList<String> secretStrings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +27,12 @@ public class ListOwnSecretsActivity extends Activity {
         setContentView(R.layout.activity_list_own_shares);
         secrets = SecretStorageHandler.retrieveAllSecrets(this);
         //TODO sort by owner
-        ArrayList<String > shareStrings = new ArrayList<>();
+        secretStrings = new ArrayList<>();
         for(Secret s : secrets ) {
-                shareStrings.add(s.getOwner() + " " + s.getName()  + " n:" + s.getN() + ",k:" + s.getK());
+                secretStrings.add(s.getOwner() + " " + s.getName()  + " n:" + s.getN() + ",k:" + s.getK());
         }
         ListView view = findViewById(R.id.share_list);
-        adapter = new ArrayAdapter(this, R.layout.ownsharelistitem, R.id.ownerNameId, shareStrings);
+        adapter = new ArrayAdapter(this, R.layout.ownsharelistitem, R.id.ownerNameId, secretStrings);
         view.setAdapter(adapter);
     }
     public void recoverSecret(View view) {
@@ -41,6 +43,7 @@ public class ListOwnSecretsActivity extends Activity {
 
         final int position = ((ListView)findViewById(R.id.share_list)).getPositionForView((View) v.getParent());
         Secret removedSecret = secrets.remove(position);
+        secretStrings.remove(position);
         try {
             SecretStorageHandler.deleteSecret(v.getContext(), removedSecret);
         } catch (JSONException e) {

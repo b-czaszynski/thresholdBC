@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class ListFriendSharesActivity extends Activity {
 
     ArrayList<Secret> secrets;
+    ArrayList<String> secretStrings;
     ArrayAdapter<String> adapter;
 
     @Override
@@ -24,7 +25,7 @@ public class ListFriendSharesActivity extends Activity {
         secrets = SecretStorageHandler.retrieveAllSecrets(this);
         //TODO sort by owner
         //TODO support multiple owners
-        ArrayList<String > secretStrings = new ArrayList<>();
+        secretStrings = new ArrayList<>();
         for(Secret s : secrets) {
             secretStrings.add(s.getOwner() + " " + s.getName() + " amount of shares I have: " + s.getShares().size());
         }
@@ -36,7 +37,11 @@ public class ListFriendSharesActivity extends Activity {
     public void deleteSecret(View v){
 
         final int position = ((ListView)findViewById(R.id.share_list)).getPositionForView((View) v.getParent());
+        System.out.println("Hello" + secrets.size());
         Secret removedSecret = secrets.remove(position);
+        secretStrings.remove(position);
+        System.out.println("Hello" + secrets.size());
+
         try {
             SecretStorageHandler.deleteSecret(v.getContext(), removedSecret);
         } catch (JSONException e) {
