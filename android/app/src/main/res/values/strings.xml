@@ -15,4 +15,5 @@
     <string name="title_activity_create_shares">CreateSharesActivity</string>
     <string name="title_activity_received_share">ReceivedShareActivity</string>
     <string name="view_own_shares" >View my secrets</string>
+    <string name="recover_secret">Recover secret</string>
 </resources>

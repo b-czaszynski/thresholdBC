@@ -62,7 +62,6 @@ public class SendShareActivity extends AppCompatActivity  implements NfcAdapter.
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
-        System.out.println("Hereheefohef" );
         NdefRecord[] recordsToAttach = createRecords();
         return new NdefMessage(recordsToAttach);
     }

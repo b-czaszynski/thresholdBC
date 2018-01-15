@@ -8,11 +8,14 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
 public class ListFriendSharesActivity extends Activity {
 
     ArrayList<Secret> secrets;
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,16 +29,28 @@ public class ListFriendSharesActivity extends Activity {
             secretStrings.add(s.getOwner() + " " + s.getName() + " amount of shares I have: " + s.getShares().size());
         }
         ListView view =  (ListView)findViewById(R.id.share_list);
-        view.setAdapter(new ArrayAdapter(this, R.layout.sharelistitem, R.id.ownerNameId, secretStrings));
+        adapter = new ArrayAdapter(this, R.layout.sharelistitem, R.id.ownerNameId, secretStrings);
+        view.setAdapter(adapter);
     }
 
-    public void deleteShare(View view) {
-        System.out.println("Trying to delete share");
+    public void deleteSecret(View v){
+
+        final int position = ((ListView)findViewById(R.id.share_list)).getPositionForView((View) v.getParent());
+        Secret removedSecret = secrets.remove(position);
+        try {
+            SecretStorageHandler.deleteSecret(v.getContext(), removedSecret);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        adapter.notifyDataSetChanged();
+
     }
 
     public void sendBackShare(View view) {
         Intent i = new Intent(this, SendShareActivity.class);
-        i.putExtra("Message", (Parcelable)secrets.toArray()[0]);
+        i.putExtra("Secret", (Parcelable)secrets.toArray()[0]);
         startActivity(i);
     }
+
+
 }

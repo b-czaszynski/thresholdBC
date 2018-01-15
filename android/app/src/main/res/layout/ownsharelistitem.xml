@@ -12,23 +12,22 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 
     <Button
-        android:id="@+id/buttonSendBack"
+        android:id="@+id/buttonRecover"
         android:layout_width="0dp"
+        android:focusable="false"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_weight="1"
-        android:onClick="sendBackShare"
-        android:text="Recover secret" />
+        android:text="@string/recover_secret" />
 
     <ImageView
         android:id="@+id/buttonDeleteShare"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:onClick="deleteShare"
         android:layout_weight="0"
+        android:onClick="deleteSecret"
         android:src="@android:drawable/ic_menu_delete"
         app:srcCompat="@android:drawable/ic_menu_delete" />
 </LinearLayout>

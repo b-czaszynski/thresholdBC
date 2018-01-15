@@ -36,7 +36,7 @@ public class SecretStorageHandler {
     }
 
     /**
-     * Stores a Set<String> of all messages with the same owner under the key 'owner'.
+     * Stores a Set<String> of all secrets with the same owner under the key 'owner'.
      */
     public static void storeSecret(Context context, Secret secret) throws JSONException{
         assert secret != null;
@@ -51,6 +51,28 @@ public class SecretStorageHandler {
             messageSet = new HashSet<>();
         }
         messageSet.add(secret.toJSON());
+
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putStringSet(secret.getOwner(),messageSet);
+        edit.apply();
+    }
+
+    /**
+     * Deletes a the given secret from the stored secrets
+     */
+    public static void deleteSecret(Context context, Secret secret) throws JSONException{
+        assert secret != null;
+        SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+
+        Set<String> messageSet;
+
+        if(preferences.contains(secret.getOwner())){
+            messageSet = preferences.getStringSet(secret.getName(), new HashSet<>());
+            //TODO store by secret name instead of owner
+        }else {
+            messageSet = new HashSet<>();
+        }
+        messageSet.remove(secret.toJSON());
 
         SharedPreferences.Editor edit = preferences.edit();
         edit.putStringSet(secret.getOwner(),messageSet);
