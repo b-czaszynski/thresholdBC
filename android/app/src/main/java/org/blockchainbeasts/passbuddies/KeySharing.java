@@ -17,7 +17,7 @@ public class KeySharing extends Activity{
     }
 
     public void viewReceivedShares(View view) {
-        startActivity(new Intent(this, ListSharesActivity.class));
+        startActivity(new Intent(this, ListFriendSharesActivity.class));
     }
 
     @Override

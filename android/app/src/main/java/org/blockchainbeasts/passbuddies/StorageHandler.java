@@ -43,6 +43,7 @@ public class StorageHandler {
 
         if(preferences.contains(message.getOwner())){
             messageSet = preferences.getStringSet(message.getOwner(), new HashSet<>());
+            //TODO store by secret name instead of owner
         }else {
             messageSet = new HashSet<>();
         }

@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListSharesActivity" />
+        <activity android:name=".ListFriendSharesActivity" />
         <activity android:name=".SendShareActivity" />
         <activity
             android:name=".RecoverSecretActivity"
