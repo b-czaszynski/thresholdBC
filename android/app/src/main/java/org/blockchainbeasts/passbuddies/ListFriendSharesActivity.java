@@ -27,7 +27,7 @@ public class ListFriendSharesActivity extends Activity {
         //TODO support multiple owners
         secretStrings = new ArrayList<>();
         for(Secret s : secrets) {
-            secretStrings.add(s.getOwner() + " " + s.getName() + " amount of shares I have: " + s.getShares().size());
+            secretStrings.add(s.getOwner() + " " + s.getName() + " amount of shares I have share with id " + s.getShares().get(0).getShareNumber());
         }
         ListView view =  (ListView)findViewById(R.id.share_list);
         adapter = new ArrayAdapter(this, R.layout.sharelistitem, R.id.ownerNameId, secretStrings);

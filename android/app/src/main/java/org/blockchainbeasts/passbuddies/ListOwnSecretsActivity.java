@@ -36,7 +36,10 @@ public class ListOwnSecretsActivity extends Activity {
         view.setAdapter(adapter);
     }
     public void recoverSecret(View view) {
-        startActivity(new Intent(this, RecoverSecretActivity.class));
+        Intent intent = new Intent(this, RecoverSecretActivity.class);
+        final int position = ((ListView)findViewById(R.id.share_list)).getPositionForView((View) view.getParent());
+        intent.putExtra("Secret",  secrets.get(position));
+        startActivity(intent);
     }
 
     public void deleteSecret(View v){

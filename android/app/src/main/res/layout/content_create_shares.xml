@@ -57,24 +57,37 @@
 
 
     <TextView
-        android:id="@+id/txtBoxSecretLabel"
+        android:id="@+id/txtViewSecretLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/secret_input_label"
         android:layout_below="@+id/numberinputLayout"
         />
     <EditText
+        android:id="@+id/txtBoxUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name"
+        android:layout_below="@+id/txtViewSecretLabel"
+        />
+    <EditText
         android:id="@+id/txtBoxSecret"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtBoxSecretLabel"
+        android:layout_below="@+id/txtBoxUserName"
         android:layout_centerHorizontal="true"/>
-        <Button
-            android:id="@+id/generateShares"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtBoxSecret"
-            android:onClick="createShares"
-            android:text="Create shares"/>
+    <Button
+        android:id="@+id/generateShares"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtBoxSecret"
+        android:onClick="createShares"
+        android:text="Create shares"/>
+    <TextView
+        android:id="@+id/txtViewProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_below="@+id/generateShares"/>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

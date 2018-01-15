@@ -27,12 +27,9 @@ import java.util.Map;
 
 public class RecoverSecretActivity extends AppCompatActivity {
 
-    private ArrayList<Secret> receivedSecretsArray = new ArrayList<>();
     private Map<Integer, Share> receivedShares = new HashMap<>();
-    private int n = 2;
-    private int k = 5;
-    private IntentFilter[] mFilters;
-    private String[][] mTechLists;
+
+    private Secret secretToRecover;
     private PendingIntent pendingIntent;
 
     //TODO list of all the user's shares
@@ -52,12 +49,13 @@ public class RecoverSecretActivity extends AppCompatActivity {
         catch (IntentFilter.MalformedMimeTypeException e) {
             throw new RuntimeException("fail", e);
         }
-        mFilters = new IntentFilter[] {ndef, };
-        mTechLists = new String[][] { new String[] { NfcF.class.getName() } };
+
+        secretToRecover = getIntent().getParcelableExtra("Secret");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //TODO ReMOVE butotn
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,38 +67,39 @@ public class RecoverSecretActivity extends AppCompatActivity {
     }
 
     private void handleNfcIntent(Intent NfcIntent) {
-        System.out.println("HANDLING NFC INTENT" + NfcIntent.getAction());
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(NfcIntent.getAction())) {
-            System.out.println("HANDLING NFC INTENT2");
             Parcelable[] receivedArray =
                     NfcIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
             if(receivedArray != null) {
-                System.out.println("HANDLING NFC INTENT3");
-                receivedSecretsArray.clear();
                 NdefMessage receivedMessage = (NdefMessage) receivedArray[0];
                 NdefRecord[] attachedRecords = receivedMessage.getRecords();
                 for (NdefRecord record:attachedRecords) {
-                    System.out.println("HANDLING NFC INTENT5");
                     byte[] buddySecretBytes = record.getPayload();
+                    System.out.println("Package" + new String(buddySecretBytes, StandardCharsets.UTF_8));
                     if (new String(buddySecretBytes, StandardCharsets.UTF_8).equals(getPackageName())) {
                         continue;
                     }
                     Secret buddySecret;
                     try {
                         buddySecret = new Secret(new String(buddySecretBytes, StandardCharsets.UTF_8));
-                        receivedSecretsArray.add(buddySecret);
-                        System.out.println(buddySecret.toJSON());
+                        if(secretToRecover.getName().equals(buddySecret.getName())
+                                && secretToRecover.getOwner().equals(buddySecret.getOwner())){
+                            for(Share s : buddySecret.getShares()) {
+                                secretToRecover.addShare(s);
+                            }
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                         return;
                     }
-                    System.out.println("RECEIVED SHARE" + buddySecret.getOwner());
-                    for(Share s : buddySecret.getShares()) {
-                        receivedShares.put(s.getShareNumber(), s);
+                    try {
+                        System.out.println("Secret to recover: " + secretToRecover.toJSON());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    if(receivedShares.size() >= k){
-                        recoverSecret();
+                    if(receivedShares.size() >= secretToRecover.getK()){
+                       System.out.println("Secret:" + secretToRecover.recoverSecret());
                     }
                 }
             }
@@ -110,16 +109,7 @@ public class RecoverSecretActivity extends AppCompatActivity {
         }
     }
 
-    private void recoverSecret() {
-        Scheme scheme = new Scheme(n, k);
-        Map<Integer, byte[]> map = new HashMap<>();
-        for(Share s : receivedShares.values()) {
-            map.put(s.getShareNumber(), s.getBytes());
-        }
-        byte[] secret = scheme.join(map);
-        Toast.makeText(this, "Recovered secret" + new String(secret, StandardCharsets.UTF_8), Toast.LENGTH_LONG);
-        //TODO show secret
-    }
+
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -131,8 +121,7 @@ public class RecoverSecretActivity extends AppCompatActivity {
         super.onResume();
         if (NfcAdapter.getDefaultAdapter(this) != null)
             NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(
-                    this, pendingIntent, mFilters,
-                    mTechLists);
+                    this, pendingIntent, null, null);
     }
 
     @Override

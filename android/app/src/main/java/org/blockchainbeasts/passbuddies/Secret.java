@@ -7,12 +7,17 @@ package org.blockchainbeasts.passbuddies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.codahale.shamir.Scheme;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents an message containing a key share
@@ -115,5 +120,18 @@ public class Secret implements Parcelable {
 
     public int getN() {
         return n;
+    }
+
+    public String recoverSecret() {
+        if(shares.size()>k){
+            return null;
+        }
+        Scheme scheme = new Scheme(n, k);
+        Map<Integer, byte[]> map = new HashMap<>();
+        for(Share s : shares) {
+            map.put(s.getShareNumber(), s.getBytes());
+        }
+        byte[] secret = scheme.join(map);
+        return new String(secret, StandardCharsets.UTF_8);
     }
 }

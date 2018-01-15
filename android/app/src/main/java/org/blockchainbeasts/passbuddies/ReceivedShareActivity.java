@@ -28,26 +28,20 @@ public class ReceivedShareActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        System.out.println("RECEIVED A SHARE");
         handleNfcIntent(getIntent());
     }
 
     public void handleNfcIntent(Intent intent) {
-        System.out.println("HANDLING NFC INTENT");
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-            System.out.println("HANDLING NFC INTENT2");
             Parcelable[] receivedArray =
                     intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
             if(receivedArray != null) {
-                System.out.println("HANDLING NFC INTENT3");
                 NdefMessage receivedMessage = (NdefMessage) receivedArray[0];
                 NdefRecord[] attachedRecords = receivedMessage.getRecords();
                 for (NdefRecord record:attachedRecords) {
                     if (!new String(record.getPayload(), StandardCharsets.UTF_8).equals(getPackageName())) {
-                        System.out.println("STORING MESSAGE"  + new String(record.getPayload(), StandardCharsets.UTF_8));
                         try {
-                            System.out.println("STORING MESSAGEFF"  + new Secret(new String(record.getPayload(), StandardCharsets.UTF_8)).toJSON());
                             SecretStorageHandler.storeSecret(this, new Secret(new String(record.getPayload(), StandardCharsets.UTF_8)));
                             ((TextView)findViewById(R.id.txtViewReceivedShare)).setText(((Secret) SecretStorageHandler.retrieveAllSecrets(this).toArray()[0]).toJSON());
                         } catch (JSONException e) {

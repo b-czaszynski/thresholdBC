@@ -9,10 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.codahale.shamir.Scheme;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
         NfcAdapter.CreateNdefMessageCallback{
 
     private ArrayList<Secret> messagesToSendArray;
+    private int succesfullSent = 0;
+    private int n;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,8 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
     public void createShares(View view) {
         byte[] secret =  ((EditText)findViewById(R.id.txtBoxSecret)).getText().toString().getBytes(StandardCharsets.UTF_8);
         String name = ((EditText)findViewById(R.id.txtBoxSecretName)).getText().toString();
-        int n = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
+        String userName = ((EditText)findViewById(R.id.txtBoxUserName)).getText().toString();
+        n = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
         int k = Integer.parseInt(((EditText)findViewById(R.id.numberInputK)).getText().toString());
         Scheme scheme = new Scheme(n, k);
         Map<Integer, byte[]> sharesBytes = scheme.split(secret);
@@ -50,7 +55,7 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
         }
         if(shares.get(0) != null){
             try {
-                Secret s = new Secret("me", name, n, k);
+                Secret s = new Secret(userName, name, n, k);
                 s.addShare(shares.remove(0));
                 SecretStorageHandler.storeSecret(this, s);
             }catch(JSONException e){
@@ -91,10 +96,9 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
         if(messagesToSendArray.size()>0) {
-            System.out.println("Sending message");
             return new NdefMessage( createRecords());
         }else{
-            System.out.println("No messages");
+            finish();
             return null;
         }
     }
@@ -102,8 +106,12 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
 
     @Override
     public void onNdefPushComplete(NfcEvent nfcEvent) {
-        System.out.println("Succesfully send over nfc");
-//        finish();
+        succesfullSent++;
+        //Make sure the text is set on the main thread
+        runOnUiThread(() -> {
+            TextView progressView = findViewById(R.id.txtViewProgress);
+            progressView.setText("Send "+succesfullSent + "/" + (n-1) + " shares");
+        });
     }
 
 
