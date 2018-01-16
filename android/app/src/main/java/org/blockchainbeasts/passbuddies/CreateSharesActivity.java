@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codahale.shamir.Scheme;
@@ -42,6 +43,8 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
     }
 
     public void createShares(View view) {
+        succesfullSent = 0;
+        //TODO input validation
         byte[] secret =  ((EditText)findViewById(R.id.txtBoxSecret)).getText().toString().getBytes(StandardCharsets.UTF_8);
         String name = ((EditText)findViewById(R.id.txtBoxSecretName)).getText().toString();
         String userName = ((EditText)findViewById(R.id.txtBoxUserName)).getText().toString();
@@ -57,6 +60,7 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
             try {
                 Secret s = new Secret(userName, name, n, k);
                 s.addShare(shares.remove(0));
+                succesfullSent++;
                 SecretStorageHandler.storeSecret(this, s);
             }catch(JSONException e){
                 e.printStackTrace();
@@ -67,11 +71,13 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
             s.addShare(shares.remove(0));
             messagesToSendArray.add(s);
         }
+        RelativeLayout relativeLayout = findViewById(R.id.relativeLayoutSecretInput);
+        relativeLayout.setVisibility(View.GONE);
+        TextView progressView = findViewById(R.id.txtViewProgress);
+        progressView.setText("Touch your phone against phones of friends to share parts of your secret(shares) with them.");
         // Register callback for nfc (i.e. enable nfcf)
-        System.out.println("ENABLING NFC" );
         NfcAdapter.getDefaultAdapter(this).setNdefPushMessageCallback(this, this);
         NfcAdapter.getDefaultAdapter(this).setOnNdefPushCompleteCallback(this, this);
-        System.out.println("Created " + messagesToSendArray.size() + "messages");
 
 //TODO give user feedback about the sending process
         //startActivity(new Intent(this, CreateSharesActivity.class));
@@ -109,10 +115,27 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
         succesfullSent++;
         //Make sure the text is set on the main thread
         runOnUiThread(() -> {
-            TextView progressView = findViewById(R.id.txtViewProgress);
-            progressView.setText("Send "+succesfullSent + "/" + (n-1) + " shares");
+            if(succesfullSent<n) {
+                TextView progressView = findViewById(R.id.txtViewProgress);
+                progressView.setText("Successfully shared with " + succesfullSent + " friends, share it with " + (n - succesfullSent) + " more");
+            }else{
+                TextView progressView = findViewById(R.id.txtViewProgress);
+                progressView.setText("");
+                RelativeLayout relativeLayout = findViewById(R.id.relativeLayoutSecretInput);
+                relativeLayout.setVisibility(View.VISIBLE);
+                clearInputs();
+            }
         });
     }
+
+    private void clearInputs() {
+        ((EditText)findViewById(R.id.txtBoxSecret)).setText("");
+        ((EditText)findViewById(R.id.txtBoxSecretName)).setText("");
+        ((EditText)findViewById(R.id.txtBoxUserName)).setText("");
+        ((EditText)findViewById(R.id.numberInputN)).setText("");
+        ((EditText)findViewById(R.id.numberInputK)).setText("");
+    }
+
 
 
     //TODO resume

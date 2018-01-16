@@ -11,7 +11,8 @@
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent" android:paddingLeft="50dp"
         android:paddingRight="50dp" android:paddingTop="50dp"
-        android:paddingBottom="50dp" tools:context=".KeySharing">
+        android:paddingBottom="50dp" tools:context=".KeySharing"
+        android:id="@+id/relativeLayoutSecretInput">
     <EditText
         android:id="@+id/txtBoxSecretName"
         android:layout_width="match_parent"
@@ -65,7 +66,7 @@
         />
     <EditText
         android:id="@+id/txtBoxUserName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewNameLabel"
         />
@@ -89,11 +90,10 @@
         android:layout_below="@+id/txtBoxSecret"
         android:onClick="createShares"
         android:text="Create shares"/>
+    </RelativeLayout>
     <TextView
         android:id="@+id/txtViewProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:layout_below="@+id/generateShares"/>
-    </RelativeLayout>
+        android:text="" />
 </android.support.constraint.ConstraintLayout>
