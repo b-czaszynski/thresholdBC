@@ -134,7 +134,6 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
     private void clearInputs() {
         ((EditText)findViewById(R.id.txtBoxSecret)).setText("");
         ((EditText)findViewById(R.id.txtBoxSecretName)).setText("");
-        ((EditText)findViewById(R.id.txtBoxUserName)).setText("");
         ((EditText)findViewById(R.id.numberInputN)).setText("");
         ((EditText)findViewById(R.id.numberInputK)).setText("");
     }
