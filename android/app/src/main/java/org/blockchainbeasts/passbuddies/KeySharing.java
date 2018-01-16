@@ -2,7 +2,9 @@ package org.blockchainbeasts.passbuddies;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
@@ -29,6 +31,11 @@ public class KeySharing extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_key_sharing);
 
+
+        SharedPreferences preferences = this.getSharedPreferences("username", Context.MODE_PRIVATE);
+        if(preferences.getString("username", null) == null){
+            startActivity(new Intent(this, SetUsernameActivity.class));
+        }
 
         int result = checkSelfPermission(Manifest.permission.NFC);
 

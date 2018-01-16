@@ -50,6 +50,7 @@ public class RecoverSecretActivity extends AppCompatActivity {
         }
 
         secretToRecover = getIntent().getParcelableExtra("Secret");
+        ((TextView)findViewById(R.id.txtViewProgress)).setText("Ask your friends for your secret named " + secretToRecover.getName());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,6 +76,7 @@ public class RecoverSecretActivity extends AppCompatActivity {
                         buddySecret = new Secret(new String(buddySecretBytes, StandardCharsets.UTF_8));
 //                        if(secretToRecover.getName().equals(buddySecret.getName())
 //                                && secretToRecover.getOwner().equals(buddySecret.getOwner())){
+                        //TODO add notification if you already have that share
                             for(Share s : buddySecret.getShares()) {
                                 secretToRecover.addShare(s);
 //                            }
@@ -82,11 +84,6 @@ public class RecoverSecretActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                         return;
-                    }
-                    try {
-                        System.out.println("Secret to recover: " + secretToRecover.toJSON());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                     ((TextView)findViewById(R.id.txtViewProgress)).setText("Recovered: " + secretToRecover.getShares().size() + "out of " + secretToRecover.getK() + " needed to recover secret");
                     if(secretToRecover.getShares().size() >= secretToRecover.getK()){

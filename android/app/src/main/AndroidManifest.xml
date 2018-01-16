@@ -20,6 +20,7 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,8 +29,7 @@
         <activity
             android:name=".RecoverSecretActivity"
             android:label="@string/title_activity_recover_secret"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity
             android:name=".CreateSharesActivity"
             android:label="@string/title_activity_create_shares"
@@ -42,13 +42,18 @@
             android:name=".ReceivedShareActivity"
             android:label="@string/title_activity_received_share"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
-             <intent-filter>
-                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                 <category android:name="android.intent.category.DEFAULT" />
-                 <data android:mimeType="text/plain" />
-             </intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
+        <activity
+            android:name=".SetUsernameActivity"
+            android:label="@string/title_activity_set_username"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -55,27 +55,12 @@
             android:layout_weight="1"
             android:layout_centerHorizontal="true"/>
     </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/textViewNameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/your_name_hint"
-        android:layout_below="@+id/numberinputLayout"
-        />
-    <EditText
-        android:id="@+id/txtBoxUserName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewNameLabel"
-        />
     <TextView
         android:id="@+id/txtViewSecretLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/secret_input_label"
-        android:layout_below="@+id/txtBoxUserName"
+        android:layout_below="@+id/numberinputLayout"
         />
     <EditText
         android:id="@+id/txtBoxSecret"

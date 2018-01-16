@@ -1,5 +1,8 @@
 package org.blockchainbeasts.passbuddies;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -47,7 +50,7 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
         //TODO input validation
         byte[] secret =  ((EditText)findViewById(R.id.txtBoxSecret)).getText().toString().getBytes(StandardCharsets.UTF_8);
         String name = ((EditText)findViewById(R.id.txtBoxSecretName)).getText().toString();
-        String userName = ((EditText)findViewById(R.id.txtBoxUserName)).getText().toString();
+        String userName = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
         n = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
         int k = Integer.parseInt(((EditText)findViewById(R.id.numberInputK)).getText().toString());
         Scheme scheme = new Scheme(n, k);

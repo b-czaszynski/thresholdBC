@@ -1,6 +1,7 @@
 package org.blockchainbeasts.passbuddies;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -26,10 +27,13 @@ public class ListOwnSecretsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_own_shares);
         secrets = SecretStorageHandler.retrieveAllSecrets(this);
+        String userName = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
         //TODO sort by owner
         secretStrings = new ArrayList<>();
         for(Secret s : secrets ) {
-                secretStrings.add(s.getOwner() + " " + s.getName()  + " n:" + s.getN() + ",k:" + s.getK());
+            if(s.getOwner().equals(userName)) {
+                secretStrings.add(s.getOwner() + " " + s.getName() + " n:" + s.getN() + ",k:" + s.getK());
+            }
         }
         ListView view = findViewById(R.id.share_list);
         adapter = new ArrayAdapter(this, R.layout.ownsharelistitem, R.id.ownerNameId, secretStrings);
