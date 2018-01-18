@@ -12,7 +12,6 @@ import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,11 +22,7 @@ import com.codahale.shamir.Scheme;
 
 import org.json.JSONException;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,10 +32,8 @@ import java.util.Set;
 public class KeySharing extends Activity
         implements NfcAdapter.OnNdefPushCompleteCallback,
         NfcAdapter.CreateNdefMessageCallback {
-    public static final String TAG = "passbudies.KeySharing";
     public static final String INTENT_INIT_SECRET = "org.blockchainbeasts.passbuddies.INIT_SECRET";
     public static final String INTENT_NFC = "android.nfc.action.NDEF_DISCOVERED";
-    public static final String secretPlaceholder = "SECRET";
 
     private ArrayList<Message> messagesToSendArray = new ArrayList<>();
     private ArrayList<Message> messagesReceivedArray = new ArrayList<>();
@@ -58,10 +51,6 @@ public class KeySharing extends Activity
     private byte[] secret = "".getBytes();
 
     private NfcAdapter mNfcAdapter;
-
-    public void updateFields() {
-
-    }
 
     public void createShares(View view) {
         if (txtBoxAddMessage.getVisibility() == View.VISIBLE) {
@@ -114,13 +103,10 @@ public class KeySharing extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_key_sharing);
 
-//        startService(new Intent(INTENT_INIT_SECRET));
-
         txtBoxAddMessage = findViewById(R.id.txtBoxSecret);
         txtViewReceivedShares = findViewById(R.id.txtViewReceivedShares);
         txtViewUnsharedShares = findViewById(R.id.txtViewUnsharedShares);
         txtViewSecret = findViewById(R.id.txtViewSecret);
-        Button btnAddMessage = findViewById(R.id.buttonAddMessage);
 
         updateTextViews();
 
@@ -272,12 +258,7 @@ public class KeySharing extends Activity
 
         Intent intent = getIntent();
 
-        switch (intent.getAction()) {
-//            case INTENT_INIT_SECRET:
-//                handleSecretIntent(intent);
-            case INTENT_NFC:
-                handleNfcIntent(intent);
-        }
+        handleNfcIntent(intent);
     }
 
     /**
