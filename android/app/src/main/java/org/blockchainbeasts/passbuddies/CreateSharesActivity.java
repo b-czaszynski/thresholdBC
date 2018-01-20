@@ -67,20 +67,20 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
             shares.add(new Share(sharesBytes.get(key), key));
         }
         // Keep shares self
+        Secret s = new Secret(username, name, n, k);
         for(int i = 0; i < amountToKeep; i++) {
             if (shares.get(0) != null) {
-                try {
-                    Secret s = new Secret(username, name, n, k);
-                    s.addShare(shares.remove(0));
-                    successfulSent++;
-                    SecretStorageHandler.storeSecret(this, s);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                s.addShare(shares.remove(0));
+                successfulSent++;
             }
         }
+        try {
+            SecretStorageHandler.storeSecret(this, s);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         while(!shares.isEmpty()){
-            Secret s = new Secret(username, name);
+            s = new Secret(username, name);
             s.addShare(shares.remove(0));
             messagesToSendArray.add(s);
         }

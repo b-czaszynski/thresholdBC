@@ -1,5 +1,6 @@
 package org.blockchainbeasts.passbuddies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -17,12 +18,15 @@ import java.nio.charset.StandardCharsets;
 
 public class ReceivedShareActivity extends AppCompatActivity {
 
+    String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_received_share);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        username = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
     }
 
     @Override
@@ -43,7 +47,9 @@ public class ReceivedShareActivity extends AppCompatActivity {
                     if (!new String(record.getPayload(), StandardCharsets.UTF_8).equals(getPackageName())) {
                         try {
                             Secret receivedSecret = new Secret(new String(record.getPayload(), StandardCharsets.UTF_8));
-                            SecretStorageHandler.storeSecret(this, receivedSecret);
+                            if(!receivedSecret.getOwner().equals(username)) {
+                                SecretStorageHandler.storeSecret(this, receivedSecret);
+                            }
                             ((TextView)findViewById(R.id.txtViewReceivedShare)).setText((receivedSecret.toJSON()));
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -56,8 +56,8 @@ public class SecretStorageHandler {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         Secret otherSecret = getSecret(context, secret.getOwner(), secret.getName());
         if(otherSecret!= null){
-            for(Share share : secret.getShares()){
-                if(secret.getShares().contains(share)) {
+            for(Share share : otherSecret.getShares()){
+                if(!secret.getShares().contains(otherSecret)) {
                     secret.addShare(share);
                 }
             }
@@ -65,6 +65,8 @@ public class SecretStorageHandler {
         SharedPreferences.Editor edit = preferences.edit();
         edit.putString(secret.getOwner()+"-"+secret.getName(), secret.toJSON());
         edit.apply();
+        new NullPointerException().printStackTrace();
+        System.out.println("Stored"+ secret.toJSON());
     }
 
     /**
@@ -73,19 +75,8 @@ public class SecretStorageHandler {
     public static void deleteSecret(Context context, Secret secret) throws JSONException{
         assert secret != null;
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-
-        Set<String> messageSet;
-
-        if(preferences.contains(secret.getOwner())){
-            messageSet = preferences.getStringSet(secret.getName(), new HashSet<>());
-            //TODO store by secret name instead of owner
-        }else {
-            messageSet = new HashSet<>();
-        }
-        messageSet.remove(secret.toJSON());
-
         SharedPreferences.Editor edit = preferences.edit();
-        edit.putStringSet(secret.getOwner(),messageSet);
+        edit.putString(secret.getOwner() + "-"+ secret.getName(), null);
         edit.apply();
     }
 }

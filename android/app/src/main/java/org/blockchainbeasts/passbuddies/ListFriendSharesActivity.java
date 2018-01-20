@@ -27,14 +27,16 @@ public class ListFriendSharesActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_list_friend_shares);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        secrets = SecretStorageHandler.retrieveAllSecrets(this);
         String userName = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
+        secrets = new ArrayList<>();
+        for(Secret s :  SecretStorageHandler.retrieveAllSecrets(this)) {
+            if(!s.getOwner().equals(userName)){
+                secrets.add(s);
+            }
+        }
         secretStrings = new ArrayList<>();
         for(Secret s : secrets) {
-            if(!s.getOwner().equals(userName)) {
-                secretStrings.add(s.getName() + "\nOwner: " + s.getOwner() + "\nAmount:" + s.getShares().size());
-            }
+            secretStrings.add(s.getName() + "\nOwner: " + s.getOwner() + "\nAmount:" + s.getShares().size());
         }
         ListView view =  (ListView)findViewById(R.id.share_list);
         adapter = new ArrayAdapter<>(this, R.layout.sharelistitem, R.id.ownerNameId, secretStrings);
@@ -67,8 +69,9 @@ public class ListFriendSharesActivity  extends AppCompatActivity {
     }
 
     public void sendBackShare(View view) {
+        final int position = ((ListView)findViewById(R.id.share_list)).getPositionForView((View) view.getParent());
         Intent i = new Intent(this, SendShareActivity.class);
-        i.putExtra("Secret", (Parcelable)secrets.toArray()[0]);
+        i.putExtra("Secret", (Parcelable)secrets.toArray()[position]);
         startActivity(i);
     }
 

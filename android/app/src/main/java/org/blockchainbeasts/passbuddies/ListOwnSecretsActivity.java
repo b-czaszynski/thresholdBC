@@ -26,15 +26,17 @@ public class ListOwnSecretsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_own_shares);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        secrets = SecretStorageHandler.retrieveAllSecrets(this);
         String userName = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
-        //TODO sort by owner
-        secretStrings = new ArrayList<>();
-        for(Secret s : secrets ) {
-            if(s.getOwner().equals(userName)) {
-                secretStrings.add(s.getName() + "\nN:" + s.getN() + ",K:" + s.getK());
+        secrets = new ArrayList<>();
+        for(Secret s :  SecretStorageHandler.retrieveAllSecrets(this)) {
+            if(
+                    s.getOwner().equals(userName)){
+                secrets.add(s);
             }
+        }
+        secretStrings = new ArrayList<>();
+        for(Secret s : secrets) {
+            secretStrings.add(s.getName() + "\nOwner: " + s.getOwner() + "\nAmount:" + s.getShares().size());
         }
         ListView view = findViewById(R.id.share_list);
         adapter = new ArrayAdapter<>(this, R.layout.ownsharelistitem, R.id.ownerNameId, secretStrings);

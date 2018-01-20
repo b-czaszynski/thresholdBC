@@ -84,7 +84,6 @@ public class Secret implements Parcelable {
         parcel.writeString(name);
         parcel.writeInt(n);
         parcel.writeInt(k);
-        //TODO write share
         parcel.writeArray(shares.toArray());
     }
 
@@ -93,7 +92,6 @@ public class Secret implements Parcelable {
         this.name = parcel.readString();
         this.n = parcel.readInt();
         this.k = parcel.readInt();
-        //TODO read shares
         this.shares = ((ArrayList<Share>) parcel.readArrayList(Share.class.getClassLoader()));
     }
 
@@ -123,7 +121,7 @@ public class Secret implements Parcelable {
     }
 
     public String recoverSecret() {
-        if(shares.size()>k){
+        if(shares.size()<k){
             return null;
         }
         Scheme scheme = new Scheme(n, k);

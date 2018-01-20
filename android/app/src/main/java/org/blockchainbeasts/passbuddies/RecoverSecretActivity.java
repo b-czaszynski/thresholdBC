@@ -67,7 +67,6 @@ public class RecoverSecretActivity extends AppCompatActivity {
                 NdefRecord[] attachedRecords = receivedMessage.getRecords();
                 for (NdefRecord record:attachedRecords) {
                     byte[] buddySecretBytes = record.getPayload();
-                    System.out.println("Package" + new String(buddySecretBytes, StandardCharsets.UTF_8));
                     if (new String(buddySecretBytes, StandardCharsets.UTF_8).equals(getPackageName())) {
                         continue;
                     }
