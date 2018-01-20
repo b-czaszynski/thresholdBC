@@ -18,7 +18,6 @@ import java.util.ArrayList;
 public class ListFriendSharesActivity  extends AppCompatActivity {
 
     ArrayList<Secret> secrets;
-    ArrayList<String> secretStrings;
     ArrayAdapter<String> adapter;
 
     @Override
@@ -27,20 +26,12 @@ public class ListFriendSharesActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_list_friend_shares);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        String userName = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
-        secrets = new ArrayList<>();
-        for(Secret s :  SecretStorageHandler.retrieveAllSecrets(this)) {
-            if(!s.getOwner().equals(userName)){
-                secrets.add(s);
-            }
-        }
-        secretStrings = new ArrayList<>();
-        for(Secret s : secrets) {
-            secretStrings.add(s.getName() + "\nOwner: " + s.getOwner() + "\nAmount:" + s.getShares().size());
-        }
-        ListView view =  (ListView)findViewById(R.id.share_list);
-        adapter = new ArrayAdapter<>(this, R.layout.sharelistitem, R.id.ownerNameId, secretStrings);
-        view.setAdapter(adapter);
+
+
+        adapter = new ArrayAdapter<>(this, R.layout.sharelistitem, R.id.ownerNameId);
+
+        updateArrayAdapter();
+
     }
 
     public void deleteSecret(View v){
@@ -55,7 +46,7 @@ public class ListFriendSharesActivity  extends AppCompatActivity {
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES I'm sure",
                 (dialog1, which) -> {
                     Secret removedSecret = secrets.remove(position);
-                    secretStrings.remove(position);
+                    updateArrayAdapter();
                     try {
                         SecretStorageHandler.deleteSecret(v.getContext(), removedSecret);
                     } catch (JSONException e) {
@@ -66,6 +57,28 @@ public class ListFriendSharesActivity  extends AppCompatActivity {
                 });
         dialog.show();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateArrayAdapter();
+    }
+
+    private void updateArrayAdapter() {
+        String userName = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
+        secrets = new ArrayList<>();
+        for(Secret s :  SecretStorageHandler.retrieveAllSecrets(this)) {
+            if(!s.getOwner().equals(userName)){
+                secrets.add(s);
+            }
+        }
+        adapter.clear();
+        for(Secret s : secrets) {
+            adapter.add(s.getName() + "\nOwner: " + s.getOwner() + "\nAmount:" + s.getShares().size());
+        }
+        ListView view =  (ListView)findViewById(R.id.share_list);
+        view.setAdapter(adapter);
     }
 
     public void sendBackShare(View view) {
