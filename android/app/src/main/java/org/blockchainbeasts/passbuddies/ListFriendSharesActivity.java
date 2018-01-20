@@ -33,7 +33,7 @@ public class ListFriendSharesActivity  extends AppCompatActivity {
         secretStrings = new ArrayList<>();
         for(Secret s : secrets) {
             if(!s.getOwner().equals(userName)) {
-                secretStrings.add(s.getOwner() + " " + s.getName() + " shares I have 1 share with id " + s.getShares().get(0).getShareNumber());
+                secretStrings.add(s.getName() + "\nOwner: " + s.getOwner() + "\nAmount:1");
             }
         }
         ListView view =  (ListView)findViewById(R.id.share_list);

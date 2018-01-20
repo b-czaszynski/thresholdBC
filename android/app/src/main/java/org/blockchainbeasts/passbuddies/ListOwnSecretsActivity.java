@@ -37,7 +37,7 @@ public class ListOwnSecretsActivity extends AppCompatActivity {
         secretStrings = new ArrayList<>();
         for(Secret s : secrets ) {
             if(s.getOwner().equals(userName)) {
-                secretStrings.add(s.getOwner() + " " + s.getName() + " n:" + s.getN() + ",k:" + s.getK());
+                secretStrings.add(s.getName() + "\nN:" + s.getN() + ",K:" + s.getK());
             }
         }
         ListView view = findViewById(R.id.share_list);
