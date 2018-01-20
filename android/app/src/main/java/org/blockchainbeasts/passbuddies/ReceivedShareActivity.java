@@ -42,8 +42,9 @@ public class ReceivedShareActivity extends AppCompatActivity {
                 for (NdefRecord record:attachedRecords) {
                     if (!new String(record.getPayload(), StandardCharsets.UTF_8).equals(getPackageName())) {
                         try {
-                            SecretStorageHandler.storeSecret(this, new Secret(new String(record.getPayload(), StandardCharsets.UTF_8)));
-                            ((TextView)findViewById(R.id.txtViewReceivedShare)).setText(((Secret) SecretStorageHandler.retrieveAllSecrets(this).toArray()[0]).toJSON());
+                            Secret receivedSecret = new Secret(new String(record.getPayload(), StandardCharsets.UTF_8));
+                            SecretStorageHandler.storeSecret(this, receivedSecret);
+                            ((TextView)findViewById(R.id.txtViewReceivedShare)).setText((receivedSecret.toJSON()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

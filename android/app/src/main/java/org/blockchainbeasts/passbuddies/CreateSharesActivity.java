@@ -50,6 +50,7 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
      * @param view the view  that calls this method
      */
     public void createShares(View view) {
+        //TODO add message that share with name already exists if it exits
         successfulSent = 0;
         // Get info from input fields
         byte[] secret =  ((EditText)findViewById(R.id.txtBoxSecret)).getText().toString().getBytes(StandardCharsets.UTF_8);

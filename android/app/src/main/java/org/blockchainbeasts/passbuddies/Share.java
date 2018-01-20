@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by dorian on 15-1-18.
@@ -73,5 +74,22 @@ public class Share  implements Parcelable {
         }
     };
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Share share = (Share) o;
+
+        if (getShareNumber() != share.getShareNumber()) return false;
+        return Arrays.equals(getBytes(), share.getBytes());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(getBytes());
+        result = 31 * result + getShareNumber();
+        return result;
+    }
 }
 

@@ -20,13 +20,12 @@ public class SecretStorageHandler {
      */
     public static ArrayList<Secret> retrieveAllSecrets(Context context) throws ClassCastException {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        Map<String, Set<String>> allSecretsStrings = (Map<String, Set<String>>)preferences.getAll();
+        Map<String, ?> allSecretsStrings = preferences.getAll();
         ArrayList<Secret> allSecrets = new ArrayList<>();
-        for(Set<String> secrets : allSecretsStrings.values()){
+        for(String key : allSecretsStrings.keySet()){
             try {
-                for(String string : secrets) {
-                    Secret secret = new Secret(string);
-                    allSecrets.add(secret);
+                if(allSecretsStrings.get(key) instanceof String) {
+                    allSecrets.add(new Secret((String)allSecretsStrings.get(key)));
                 }
             }catch (JSONException e) {
                 e.printStackTrace();
@@ -36,24 +35,35 @@ public class SecretStorageHandler {
     }
 
     /**
+     *Retrieves a specific secret.
+     * @return Get a specific secret
+     */
+    public static Secret getSecret(Context context, String secretOwner, String secretName) throws ClassCastException, JSONException {
+        SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        String secretString = preferences.getString(secretOwner+"-"+secretName, "");
+        if(!secretString.equals("")){
+           return new Secret(secretString);
+        }
+        return null;
+    }
+
+
+    /**
      * Stores a Set<String> of all secrets with the same owner under the key 'owner'.
      */
     public static void storeSecret(Context context, Secret secret) throws JSONException{
         assert secret != null;
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-
-        Set<String> messageSet;
-
-        if(preferences.contains(secret.getOwner())){
-            messageSet = preferences.getStringSet(secret.getName(), new HashSet<>());
-            //TODO store by secret name instead of owner
-        }else {
-            messageSet = new HashSet<>();
+        Secret otherSecret = getSecret(context, secret.getOwner(), secret.getName());
+        if(otherSecret!= null){
+            for(Share share : secret.getShares()){
+                if(secret.getShares().contains(share)) {
+                    secret.addShare(share);
+                }
+            }
         }
-        messageSet.add(secret.toJSON());
-
         SharedPreferences.Editor edit = preferences.edit();
-        edit.putStringSet(secret.getOwner(),messageSet);
+        edit.putString(secret.getOwner()+"-"+secret.getName(), secret.toJSON());
         edit.apply();
     }
 

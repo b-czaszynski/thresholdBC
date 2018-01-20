@@ -74,6 +74,7 @@ public class RecoverSecretActivity extends AppCompatActivity {
                     Secret buddySecret;
                     try {
                         buddySecret = new Secret(new String(buddySecretBytes, StandardCharsets.UTF_8));
+                        //TODO check if correct share
 //                        if(secretToRecover.getName().equals(buddySecret.getName())
 //                                && secretToRecover.getOwner().equals(buddySecret.getOwner())){
                         //TODO add notification if you already have that share
