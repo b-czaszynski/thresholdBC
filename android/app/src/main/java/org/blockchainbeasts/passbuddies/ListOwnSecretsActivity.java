@@ -1,27 +1,23 @@
 package org.blockchainbeasts.passbuddies;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.json.JSONException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Set;
 
 public class ListOwnSecretsActivity extends AppCompatActivity {
 
     ArrayList<Secret> secrets;
-    ArrayAdapter<Secret> adapter;
+    ArrayAdapter<String> adapter;
     ArrayList<String> secretStrings;
 
     @Override
@@ -41,7 +37,7 @@ public class ListOwnSecretsActivity extends AppCompatActivity {
             }
         }
         ListView view = findViewById(R.id.share_list);
-        adapter = new ArrayAdapter(this, R.layout.ownsharelistitem, R.id.ownerNameId, secretStrings);
+        adapter = new ArrayAdapter<>(this, R.layout.ownsharelistitem, R.id.ownerNameId, secretStrings);
         view.setAdapter(adapter);
     }
     public void recoverSecret(View view) {
@@ -52,16 +48,27 @@ public class ListOwnSecretsActivity extends AppCompatActivity {
     }
 
     public void deleteSecret(View v){
-
         final int position = ((ListView)findViewById(R.id.share_list)).getPositionForView((View) v.getParent());
-        Secret removedSecret = secrets.remove(position);
-        secretStrings.remove(position);
-        try {
-            SecretStorageHandler.deleteSecret(v.getContext(), removedSecret);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        adapter.notifyDataSetChanged();
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Secret secret = secrets.get(position);
+        dialog.setTitle("Are you sure?");
+        dialog.setMessage("Do you really want to delete "+ secret.getName() + "?");
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                (dialog1, which) -> dialog1.dismiss()
+        );
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES I'm sure",
+                (dialog1, which) -> {
+                    Secret removedSecret = secrets.remove(position);
+                    secretStrings.remove(position);
+                    try {
+                        SecretStorageHandler.deleteSecret(v.getContext(), removedSecret);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    dialog1.dismiss();
+                    adapter.notifyDataSetChanged();
+                });
+        dialog.show();
 
     }
 }

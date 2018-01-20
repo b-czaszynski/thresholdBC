@@ -1,6 +1,6 @@
 package org.blockchainbeasts.passbuddies;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,24 +37,32 @@ public class ListFriendSharesActivity  extends AppCompatActivity {
             }
         }
         ListView view =  (ListView)findViewById(R.id.share_list);
-        adapter = new ArrayAdapter(this, R.layout.sharelistitem, R.id.ownerNameId, secretStrings);
+        adapter = new ArrayAdapter<>(this, R.layout.sharelistitem, R.id.ownerNameId, secretStrings);
         view.setAdapter(adapter);
     }
 
     public void deleteSecret(View v){
-
         final int position = ((ListView)findViewById(R.id.share_list)).getPositionForView((View) v.getParent());
-        System.out.println("Hello" + secrets.size());
-        Secret removedSecret = secrets.remove(position);
-        secretStrings.remove(position);
-        System.out.println("Hello" + secrets.size());
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Secret secret = secrets.get(position);
+        dialog.setTitle("Are you sure?");
+        dialog.setMessage("Do you really want "+secret.getOwner() + "'s secret "+ secret.getName() + "?\nIf you delete your share " + secret.getOwner() + " might not be able to recover his secret anymore!");
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                (dialog1, which) -> dialog1.dismiss()
+        );
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES I'm sure",
+                (dialog1, which) -> {
+                    Secret removedSecret = secrets.remove(position);
+                    secretStrings.remove(position);
+                    try {
+                        SecretStorageHandler.deleteSecret(v.getContext(), removedSecret);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    adapter.notifyDataSetChanged();
 
-        try {
-            SecretStorageHandler.deleteSecret(v.getContext(), removedSecret);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        adapter.notifyDataSetChanged();
+                });
+        dialog.show();
 
     }
 
