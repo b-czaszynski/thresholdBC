@@ -24,19 +24,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListFriendSharesActivity" />
+        <activity
+            android:name=".ListFriendSharesActivity"
+            android:label="@string/title_activity_list_friend_shares"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".SendShareActivity" />
         <activity
             android:name=".RecoverSecretActivity"
             android:label="@string/title_activity_recover_secret"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".CreateSharesActivity"
             android:label="@string/title_activity_create_shares"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ListOwnSecretsActivity"
-            android:label="My shares"
+            android:label="@string/title_activity_list_own_shares"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ReceivedShareActivity"
@@ -53,7 +56,7 @@
         <activity
             android:name=".SetUsernameActivity"
             android:label="@string/title_activity_set_username"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

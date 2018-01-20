@@ -15,6 +15,8 @@
     <string name="title_activity_recover_secret">Recovering a secret</string>
     <string name="title_activity_create_shares">Sharing a secret</string>
     <string name="title_activity_received_share">Received a secret</string>
+    <string name="title_activity_list_friend_shares">Friends shares</string>
+    <string name="title_activity_list_own_shares">Your shares</string>
     <string name="view_own_shares">View my secrets</string>
     <string name="recover_secret">Recover</string>
     <string name="name">Name</string>

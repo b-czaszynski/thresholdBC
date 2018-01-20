@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,7 +18,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class ListOwnSecretsActivity extends Activity {
+public class ListOwnSecretsActivity extends AppCompatActivity {
 
     ArrayList<Secret> secrets;
     ArrayAdapter<Secret> adapter;
@@ -26,6 +28,9 @@ public class ListOwnSecretsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_own_shares);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         secrets = SecretStorageHandler.retrieveAllSecrets(this);
         String userName = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
         //TODO sort by owner

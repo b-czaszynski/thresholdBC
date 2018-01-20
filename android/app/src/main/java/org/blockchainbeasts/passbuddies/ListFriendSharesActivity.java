@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -13,7 +15,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class ListFriendSharesActivity extends Activity {
+public class ListFriendSharesActivity  extends AppCompatActivity {
 
     ArrayList<Secret> secrets;
     ArrayList<String> secretStrings;
@@ -23,9 +25,11 @@ public class ListFriendSharesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_friend_shares);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         secrets = SecretStorageHandler.retrieveAllSecrets(this);
         String userName = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
-        //TODO sort by owner
         secretStrings = new ArrayList<>();
         for(Secret s : secrets) {
             if(!s.getOwner().equals(userName)) {

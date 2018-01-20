@@ -36,12 +36,11 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_shares);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        setSupportActionBar(toolbar);
 
         //Disable nfc untill messages are available
         NfcAdapter.getDefaultAdapter(this).setNdefPushMessageCallback(this, this);
         NfcAdapter.getDefaultAdapter(this).setOnNdefPushCompleteCallback(this, this);
-        setSupportActionBar(toolbar);
         messagesToSendArray = new ArrayList<>();
     }
 
@@ -137,8 +136,4 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
         ((EditText)findViewById(R.id.numberInputN)).setText("");
         ((EditText)findViewById(R.id.numberInputK)).setText("");
     }
-
-
-
-    //TODO resume
 }
