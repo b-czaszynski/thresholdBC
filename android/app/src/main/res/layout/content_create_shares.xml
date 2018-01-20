@@ -22,7 +22,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:id="@+id/numberinputLayout"
+        android:id="@+id/numberInputLayout"
         android:layout_below="@+id/txtBoxSecretName"
         android:layout_height="wrap_content"
         android:weightSum="4">
@@ -56,11 +56,25 @@
             android:layout_centerHorizontal="true"/>
     </LinearLayout>
     <TextView
+        android:id="@+id/textViewAmountToKeepLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/amount_of_shares_to_keep_yourself"
+        android:layout_below="@+id/numberInputLayout"
+        />
+    <EditText
+        android:id="@+id/numberInputAmountToKeep"
+        android:inputType="number"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_below="@id/textViewAmountToKeepLabel"/>
+    <TextView
         android:id="@+id/txtViewSecretLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/secret_input_label"
-        android:layout_below="@+id/numberinputLayout"
+        android:layout_below="@+id/numberInputAmountToKeep"
         />
     <EditText
         android:id="@+id/txtBoxSecret"

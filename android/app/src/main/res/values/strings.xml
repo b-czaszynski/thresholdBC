@@ -21,4 +21,5 @@
     <string name="recover_secret">Recover</string>
     <string name="name">Name</string>
     <string name="title_activity_set_username">Username</string>
+    <string name="amount_of_shares_to_keep_yourself">Amount of shares to keep yourself:</string>
 </resources>
