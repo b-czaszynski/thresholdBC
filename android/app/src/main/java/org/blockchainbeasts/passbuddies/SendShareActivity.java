@@ -38,7 +38,6 @@ public class SendShareActivity extends AppCompatActivity  implements NfcAdapter.
         if (mNfcAdapter == null) {
             Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
             finish();
-            return;
         }
     }
 
@@ -76,7 +75,6 @@ public class SendShareActivity extends AppCompatActivity  implements NfcAdapter.
 
     @Override
     public void onNdefPushComplete(NfcEvent nfcEvent) {
-        System.out.println("Succesfully send over nfc");
         finish();
     }
 }

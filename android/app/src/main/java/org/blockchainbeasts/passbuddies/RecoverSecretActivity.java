@@ -31,8 +31,6 @@ public class RecoverSecretActivity extends AppCompatActivity {
     private Secret secretToRecover;
     private PendingIntent pendingIntent;
 
-    //TODO list of all the user's shares
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
