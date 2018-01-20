@@ -73,26 +73,31 @@ public class RecoverSecretActivity extends AppCompatActivity {
                     Secret buddySecret;
                     try {
                         buddySecret = new Secret(new String(buddySecretBytes, StandardCharsets.UTF_8));
-                        //TODO check if correct share
-//                        if(secretToRecover.getName().equals(buddySecret.getName())
-//                                && secretToRecover.getOwner().equals(buddySecret.getOwner())){
-                        //TODO add notification if you already have that share
-                            for(Share s : buddySecret.getShares()) {
-                                secretToRecover.addShare(s);
-//                            }
+                        if(secretToRecover.getName().equals(buddySecret.getName())
+                                && secretToRecover.getOwner().equals(buddySecret.getOwner())){
+                                for(Share s : buddySecret.getShares()) {
+                                    if(!secretToRecover.getShares().contains(s)) {
+                                        secretToRecover.addShare(s);
+                                    }else{
+                                        Toast.makeText(this, "Received a duplicate share", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                                ((TextView)findViewById(R.id.txtViewProgress)).setText("Recovered: " + secretToRecover.getShares().size() + "out of " + secretToRecover.getK() + " needed to recover secret");
+                                if(secretToRecover.getShares().size() >= secretToRecover.getK()){
+                                    ((TextView)findViewById(R.id.txtViewProgress)).setText("Recovered secret:" + secretToRecover.recoverSecret());
+                                }
+                        }else{
+                            Toast.makeText(this, "Received share does not belong to this secret", Toast.LENGTH_LONG).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                         return;
                     }
-                    ((TextView)findViewById(R.id.txtViewProgress)).setText("Recovered: " + secretToRecover.getShares().size() + "out of " + secretToRecover.getK() + " needed to recover secret");
-                    if(secretToRecover.getShares().size() >= secretToRecover.getK()){
-                        ((TextView)findViewById(R.id.txtViewProgress)).setText("Recovered secret:" + secretToRecover.recoverSecret());
-                    }
+
                 }
             }
             else {
-                Toast.makeText(this, "Received Blank Parcel", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Received an empty message", Toast.LENGTH_LONG).show();
             }
         }
     }
