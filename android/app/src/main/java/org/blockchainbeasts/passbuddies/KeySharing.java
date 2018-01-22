@@ -64,28 +64,4 @@ public class KeySharing extends Activity{
     public void onClickViewReceivedSharesButton(View view) {
         startActivity(new Intent(this, ListFriendSharesActivity.class));
     }
-
-
-    private void handleSecretIntent(Intent secretIntent) {
-
-        String userName = "External";
-
-        if (secretIntent.hasExtra("user_name")) {
-            userName = secretIntent.getStringExtra("user_name");
-        }
-        if (secretIntent.hasExtra("number_of_shares")) {
-            n = secretIntent.getIntExtra("number_of_shares", n);
-        }
-        if (secretIntent.hasExtra("shares_to_recover")) {
-            k = secretIntent.getIntExtra("shares_to_recover", k);
-        }
-        if (secretIntent.hasExtra("secret")) {
-            secret = secretIntent.getByteArrayExtra("secret");
-            txtBoxAddMessage.setVisibility(View.INVISIBLE);
-        }
-
-        ((EditText) findViewById(R.id.txtBoxUserName)).setText(userName);
-        ((EditText) findViewById(R.id.numberInputN)).setText(n + "");
-        ((EditText) findViewById(R.id.numberInputK)).setText(k + "");
-    }
 }
