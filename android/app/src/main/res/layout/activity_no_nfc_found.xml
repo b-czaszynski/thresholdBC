@@ -1,0 +1,13 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="50dp"
+    android:paddingRight="50dp" android:paddingTop="50dp"
+    android:paddingBottom="50dp" tools:context=".NoNfcFoundActivity">
+
+    <TextView
+        android:id="@+id/sendBackReceivedMessages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_nfc_found"/>
+
+</RelativeLayout>

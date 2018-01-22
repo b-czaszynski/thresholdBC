@@ -4,8 +4,23 @@
     <string name="name_input_label">Name</string>
     <string name="secret_input_label">Secret</string>
     <string name="button_create_shares">Create shares</string>
-    <string name="button_send_back_share">Send back share</string>
+    <string name="button_send_back_share">Return</string>
     <string name="your_name_hint">Your name</string>
     <string name="number_input_n_hint">N</string>
     <string name="number_input_t_hint">T</string>
+    <string name="button_delete_share">Delete share</string>
+    <string name="view_shares">View friend shares</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_recover_secret">Recovering a secret</string>
+    <string name="title_activity_create_shares">Sharing a secret</string>
+    <string name="title_activity_received_share">Received a secret</string>
+    <string name="title_activity_list_friend_shares">Friends shares</string>
+    <string name="title_activity_list_own_shares">Your shares</string>
+    <string name="title_no_nfc_found">No NFC found</string>
+    <string name="view_own_shares">View my secrets</string>
+    <string name="recover_secret">Recover</string>
+    <string name="name">Name</string>
+    <string name="title_activity_set_username">Username</string>
+    <string name="amount_of_shares_to_keep_yourself">Amount of shares to keep yourself:</string>
+    <string name="no_nfc_found">Sorry, you don\'t seem to have NFC on your device!</string>
 </resources>

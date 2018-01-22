@@ -3,7 +3,10 @@
     package="org.blockchainbeasts.passbuddies">
 
     <uses-permission android:name="android.permission.NFC" />
-    <uses-feature android:name="android.hardware.nfc" android:required="true"/>
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -11,10 +14,10 @@
         android:label="PassBuddies"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:launchMode="singleTask"
-            android:name=".KeySharing" >
+            android:name=".KeySharing"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="org.blockchainbeasts.passbuddies.INIT_SECRET" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -26,13 +29,45 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ListFriendSharesActivity"
+            android:label="@string/title_activity_list_friend_shares"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".SendShareActivity" />
+        <activity
+            android:name=".RecoverSecretActivity"
+            android:label="@string/title_activity_recover_secret"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".CreateSharesActivity"
+            android:label="@string/title_activity_create_shares"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ListOwnSecretsActivity"
+            android:label="@string/title_activity_list_own_shares"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ReceivedShareActivity"
+            android:label="@string/title_activity_received_share"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
 
         </activity>
+        <activity
+            android:name=".SetUsernameActivity"
+            android:label="@string/title_activity_set_username"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".NoNfcFoundActivity"
+            android:label="@string/title_no_nfc_found"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

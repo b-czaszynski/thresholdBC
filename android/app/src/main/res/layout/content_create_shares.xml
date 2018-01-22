@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="org.blockchainbeasts.passbuddies.CreateSharesActivity"
+    tools:showIn="@layout/activity_create_shares">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:paddingLeft="50dp"
+        android:paddingRight="50dp" android:paddingTop="50dp"
+        android:paddingBottom="50dp" tools:context=".KeySharing"
+        android:id="@+id/relativeLayoutSecretInput">
+    <EditText
+        android:id="@+id/txtBoxSecretName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint='Secret name'/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/numberInputLayout"
+        android:layout_below="@+id/txtBoxSecretName"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+
+        <TextView
+            android:id="@+id/numberInputKLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="K: "
+            />
+        <EditText
+            android:id="@+id/numberInputK"
+            android:inputType="number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/numberInputNLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="N: "
+            />
+        <EditText
+            android:id="@+id/numberInputN"
+            android:inputType="number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/textViewAmountToKeepLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/amount_of_shares_to_keep_yourself"
+        android:layout_below="@+id/numberInputLayout"
+        />
+    <EditText
+        android:id="@+id/numberInputAmountToKeep"
+        android:inputType="number"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_below="@id/textViewAmountToKeepLabel"/>
+    <TextView
+        android:id="@+id/txtViewSecretLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/secret_input_label"
+        android:layout_below="@+id/numberInputAmountToKeep"
+        />
+    <EditText
+        android:id="@+id/txtBoxSecret"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtViewSecretLabel"
+        android:layout_centerHorizontal="true"/>
+    <Button
+        android:id="@+id/generateShares"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtBoxSecret"
+        android:onClick="createShares"
+        android:text="Create shares"/>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/txtViewProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+</android.support.constraint.ConstraintLayout>
