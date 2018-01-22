@@ -19,6 +19,12 @@
             android:name=".KeySharing"
             android:launchMode="singleTask">
             <intent-filter>
+                <action android:name="org.blockchainbeasts.passbuddies.INIT_SECRET" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!--<data android:mimeType="text/plain" />-->
+                <!--<data android:mimeType="byte[]" />-->
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -52,6 +58,7 @@
 
                 <data android:mimeType="text/plain" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".SetUsernameActivity"
