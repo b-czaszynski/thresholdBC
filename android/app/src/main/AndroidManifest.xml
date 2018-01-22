@@ -57,6 +57,10 @@
             android:name=".SetUsernameActivity"
             android:label="@string/title_activity_set_username"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".NoNfcFoundActivity"
+            android:label="@string/title_no_nfc_found"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

@@ -31,20 +31,26 @@ public class KeySharing extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_key_sharing);
 
+        //Check whether device has nfc
+        if (NfcAdapter.getDefaultAdapter(this) == null) {
+            startActivity(new Intent(this, NoNfcFoundActivity.class));
+        } else {
+            //Check if we have nfc permission
+            if ( checkSelfPermission(Manifest.permission.NFC) == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "NFC permission granted",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                requestPermissions(new String[]{Manifest.permission.NFC}, 0);
+            }
+            // Clear nfc messages to send
+            NfcAdapter.getDefaultAdapter(this).setNdefPushMessage(null, this);
+        }
+
         // Get username
         SharedPreferences preferences = this.getSharedPreferences("username", Context.MODE_PRIVATE);
         if(preferences.getString("username", null) == null){
             startActivity(new Intent(this, SetUsernameActivity.class));
         }
-        //Check if we have nfc permission
-        if ( checkSelfPermission(Manifest.permission.NFC) == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "NFC permission granted",
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            requestPermissions(new String[]{Manifest.permission.NFC}, 0);
-        }
-        //Clear nfc messages to send
-        NfcAdapter.getDefaultAdapter(this).setNdefPushMessage(null, this);
     }
 
 //Navigation
