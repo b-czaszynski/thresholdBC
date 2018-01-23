@@ -19,14 +19,7 @@
             android:name=".KeySharing"
             android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="org.blockchainbeasts.passbuddies.INIT_SECRET" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <!--<data android:mimeType="text/plain" />-->
-                <!--<data android:mimeType="byte[]" />-->
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -42,7 +35,15 @@
         <activity
             android:name=".CreateSharesActivity"
             android:label="@string/title_activity_create_shares"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="org.blockchainbeasts.passbuddies.INIT_SECRET" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!--<data android:mimeType="text/plain" />-->
+                <!--<data android:mimeType="byte[]" />-->
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ListOwnSecretsActivity"
             android:label="@string/title_activity_list_own_shares"
