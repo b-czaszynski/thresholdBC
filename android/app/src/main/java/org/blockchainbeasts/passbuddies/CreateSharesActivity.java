@@ -1,6 +1,7 @@
 package org.blockchainbeasts.passbuddies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -24,9 +25,12 @@ import java.util.Map;
 public class CreateSharesActivity extends AppCompatActivity implements NfcAdapter.OnNdefPushCompleteCallback,
         NfcAdapter.CreateNdefMessageCallback{
 
+    public static final String INTENT_INIT_SECRET = "org.blockchainbeasts.passbuddies.INIT_SECRET";
+
     private ArrayList<Secret> messagesToSendArray;
     private int successfulSent = 0;
     private int n;
+    private byte[] secret = "".getBytes();
 
     /**
      * Called when this Activity is created
@@ -35,6 +39,7 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_create_shares);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -43,6 +48,17 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
         NfcAdapter.getDefaultAdapter(this).setNdefPushMessageCallback(this, this);
         NfcAdapter.getDefaultAdapter(this).setOnNdefPushCompleteCallback(this, this);
         messagesToSendArray = new ArrayList<>();
+
+        if(getIntent() != null
+                && INTENT_INIT_SECRET.equals(getIntent().getAction()))
+            handleSecretIntent(getIntent());
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        if (INTENT_INIT_SECRET.equals(intent.getAction())) {
+            handleSecretIntent(intent);
+        }
     }
 
     /**
@@ -53,7 +69,9 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
         //TODO add message that share with name already exists if it exits
         successfulSent = 0;
         // Get info from input fields
-        byte[] secret =  ((EditText)findViewById(R.id.txtBoxSecret)).getText().toString().getBytes(StandardCharsets.UTF_8);
+        if (((EditText)findViewById(R.id.txtBoxSecret)).getVisibility() == View.VISIBLE)
+            secret =  ((EditText)findViewById(R.id.txtBoxSecret)).getText().toString().getBytes(StandardCharsets.UTF_8);
+
         String name = ((EditText)findViewById(R.id.txtBoxSecretName)).getText().toString();
         String username = this.getSharedPreferences("username", Context.MODE_PRIVATE).getString("username", null);
         n = Integer.parseInt(((EditText)findViewById(R.id.numberInputN)).getText().toString());
@@ -146,6 +164,43 @@ public class CreateSharesActivity extends AppCompatActivity implements NfcAdapte
                 clearInputs();
             }
         });
+    }
+
+    private void handleSecretIntent(Intent secretIntent) {
+        String userName = "External";
+        int k = 1;
+        int n = 1;
+        int sharesToKeep = 1;
+
+        //Check which extras are available
+        if (secretIntent.hasExtra("user_name")
+                && secretIntent.getStringExtra("user_name") != null) {
+            userName = secretIntent.getStringExtra("user_name");
+        }
+        if (secretIntent.hasExtra("number_of_shares")
+                && secretIntent.getIntExtra("number_of_shares", 0) != 0) {
+            n = secretIntent.getIntExtra("number_of_shares", n);
+        }
+        if (secretIntent.hasExtra("shares_to_recover")
+                && secretIntent.getIntExtra("shares_to_recover", 0) != 0) {
+            k = secretIntent.getIntExtra("shares_to_recover", k);
+        }
+        if (secretIntent.hasExtra("shares_to_keep")
+                && secretIntent.getIntExtra("shares_to_keep", 0) != 0) {
+            sharesToKeep = secretIntent.getIntExtra("shares_to_keep", sharesToKeep);
+        }
+        if (secretIntent.hasExtra("secret")
+                && secretIntent.getStringExtra("user_name") != null) {
+            secret = secretIntent.getByteArrayExtra("secret");
+            //Set secret view to invisible, so the secret cannot be changed.
+            findViewById(R.id.txtBoxSecret).setVisibility(View.INVISIBLE);
+            ((TextView)findViewById(R.id.txtViewSecretLabel)).setText("Secret: invisible");
+        }
+
+        ((EditText) findViewById(R.id.txtBoxSecretName)).setText(userName);
+        ((EditText) findViewById(R.id.numberInputN)).setText(n + "");
+        ((EditText) findViewById(R.id.numberInputK)).setText(k + "");
+        ((EditText)findViewById(R.id.numberInputAmountToKeep)).setText(sharesToKeep + "");
     }
 
     /**
