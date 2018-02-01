@@ -1,9 +1,7 @@
 # thresholdBC
 ## Introduction
 One of the problems of blockchain technology is private keys getting lost, this android application we developed aims to solve that problem. This application uses  [codehale](https://github.com/codahale/shamir) Shamir's secret sharing to divide a private key (or any secret) in k shares. Shares can be easily distributed among friends using NFC, more trustworthy friends can get multiple secrets.
-A lost private key can be recovered by bringing friends together with at least n shares and combining their shares to recover the secret. This application functions independently from any particular blockchain, it can be used to make secure secret recovery possible for any kind of secret.
-
-However, as an example an integration has been made in a fork https://github.com/TBruyn/trustchain_keyshare the trustchain mobile application https://github.com/wkmeijer/CS4160-trustchain-android .
+A lost private key can be recovered by bringing friends together with at least n shares and combining their shares to recover the secret. This application functions independently from any particular blockchain, it can be used to make secure secret recovery possible for any kind of secret. However, as an example an integration has been made in a fork https://github.com/TBruyn/trustchain_keyshare the trustchain mobile application https://github.com/wkmeijer/CS4160-trustchain-android .
 
 ## Getting Started
 
